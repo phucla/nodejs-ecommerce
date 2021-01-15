@@ -15,5 +15,9 @@
       "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
     }
   },
-  "projects": { "admin-portal": { "tags": [] } }
+  "projects": {
+    "admin-portal": { "tags": [] },
+    "store-manager-portal": { "tags": [] },
+    "customer-portal": { "tags": [] }
+  }
 }

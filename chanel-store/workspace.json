@@ -59,6 +59,124 @@
           }
         }
       }
+    },
+    "store-manager-portal": {
+      "root": "apps/store-manager-portal",
+      "sourceRoot": "apps/store-manager-portal/src",
+      "projectType": "application",
+      "prefix": "store-manager-portal",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/store-manager-portal",
+            "main": "apps/store-manager-portal/src/main.ts",
+            "tsConfig": "apps/store-manager-portal/tsconfig.app.json",
+            "assets": [
+              "apps/store-manager-portal/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/store-manager-portal/src/environments/environment.ts",
+                  "with": "apps/store-manager-portal/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "store-manager-portal:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/store-manager-portal/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/store-manager-portal"
+          ],
+          "options": {
+            "jestConfig": "apps/store-manager-portal/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "customer-portal": {
+      "root": "apps/customer-portal",
+      "sourceRoot": "apps/customer-portal/src",
+      "projectType": "application",
+      "prefix": "customer-portal",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/customer-portal",
+            "main": "apps/customer-portal/src/main.ts",
+            "tsConfig": "apps/customer-portal/tsconfig.app.json",
+            "assets": [
+              "apps/customer-portal/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/customer-portal/src/environments/environment.ts",
+                  "with": "apps/customer-portal/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "customer-portal:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/customer-portal/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/customer-portal"
+          ],
+          "options": {
+            "jestConfig": "apps/customer-portal/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

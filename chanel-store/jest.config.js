@@ -3,5 +3,6 @@ module.exports = {
     '<rootDir>/apps/admin-portal',
     '<rootDir>/apps/store-manager-portal',
     '<rootDir>/apps/customer-portal',
+    '<rootDir>/libs/core',
   ],
 };

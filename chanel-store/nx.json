@@ -18,6 +18,7 @@
   "projects": {
     "admin-portal": { "tags": [] },
     "store-manager-portal": { "tags": [] },
-    "customer-portal": { "tags": [] }
+    "customer-portal": { "tags": [] },
+    "core": { "tags": [] }
   }
 }

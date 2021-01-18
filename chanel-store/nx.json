@@ -22,6 +22,7 @@
     "core": { "tags": [] },
     "auth": { "tags": [] },
     "product": { "tags": [] },
-    "customer": { "tags": [] }
+    "customer": { "tags": [] },
+    "database": { "tags": [] }
   }
 }

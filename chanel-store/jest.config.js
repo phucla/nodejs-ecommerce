@@ -7,5 +7,6 @@ module.exports = {
     '<rootDir>/libs/auth',
     '<rootDir>/libs/product',
     '<rootDir>/libs/customer',
+    '<rootDir>/libs/database',
   ],
 };

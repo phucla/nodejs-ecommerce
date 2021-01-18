@@ -19,6 +19,9 @@
     "admin-portal": { "tags": [] },
     "store-manager-portal": { "tags": [] },
     "customer-portal": { "tags": [] },
-    "core": { "tags": [] }
+    "core": { "tags": [] },
+    "auth": { "tags": [] },
+    "product": { "tags": [] },
+    "customer": { "tags": [] }
   }
 }

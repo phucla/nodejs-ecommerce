@@ -15,22 +15,13 @@
           "options": {
             "outputPath": "dist/apps/admin-portal",
             "main": "apps/admin-portal/src/main.ts",
-            "tsConfig": "apps/admin-portal/tsconfig.app.json",
-            "assets": [
-              "apps/admin-portal/src/assets"
-            ]
+            "tsConfig": "apps/admin-portal/tsconfig.app.json"
           },
           "configurations": {
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/admin-portal/src/environments/environment.ts",
-                  "with": "apps/admin-portal/src/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
             }
           }
         },
@@ -74,22 +65,13 @@
           "options": {
             "outputPath": "dist/apps/store-manager-portal",
             "main": "apps/store-manager-portal/src/main.ts",
-            "tsConfig": "apps/store-manager-portal/tsconfig.app.json",
-            "assets": [
-              "apps/store-manager-portal/src/assets"
-            ]
+            "tsConfig": "apps/store-manager-portal/tsconfig.app.json"
           },
           "configurations": {
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/store-manager-portal/src/environments/environment.ts",
-                  "with": "apps/store-manager-portal/src/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
             }
           }
         },
@@ -133,22 +115,13 @@
           "options": {
             "outputPath": "dist/apps/customer-portal",
             "main": "apps/customer-portal/src/main.ts",
-            "tsConfig": "apps/customer-portal/tsconfig.app.json",
-            "assets": [
-              "apps/customer-portal/src/assets"
-            ]
+            "tsConfig": "apps/customer-portal/tsconfig.app.json"
           },
           "configurations": {
             "production": {
               "optimization": true,
               "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/customer-portal/src/environments/environment.ts",
-                  "with": "apps/customer-portal/src/environments/environment.prod.ts"
-                }
-              ]
+              "inspect": false
             }
           }
         },

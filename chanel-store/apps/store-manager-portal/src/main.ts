@@ -2,10 +2,11 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
-
+// Standard library
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
+// Internal
 import { AppModule } from './app/app.module';
 
 async function bootstrap() {

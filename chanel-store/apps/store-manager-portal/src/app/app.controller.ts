@@ -1,5 +1,7 @@
+// Standard library
 import { Controller, Get } from '@nestjs/common';
 
+// Internal
 import { AppService } from './app.service';
 
 @Controller()

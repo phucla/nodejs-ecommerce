@@ -40,4 +40,50 @@ Use [Trello](https://trello.com/b/G6qZfbDk) to management task and this is a pri
 
 - Follow content of file `.env.sample` and update value mapping with environment configurations.
 
-### How to run (TBD)
+### How to run
+
+**Source bash file to load helper scripts**
+
+```
+source bin/activate.sh
+```
+
+**_1. Admin portal app_**
+
+`do-admin-start` Run app server and go to [http://localhost:3000/]
+
+`do-admin-build` Build admin portal app from TS to JS.
+
+`do-admin-linting` Check code style for admin portal.
+
+`do-admin-test` Run unit test for admin portal.
+
+`do-admin-portal-deploy` Deploy admin portal.
+
+**_2. Store manager portal app_**
+
+`do-store-start` Run app server and go to [http://localhost:3002/].
+
+`do-store-build` Build store portal app from TS to JS.
+
+`do-store-linting` Check code style for store portal.
+
+`do-store-portal-test` Run unit test for store portal.
+
+`do-store-portal-deploy` Deploy store portal.
+
+**_3. Customer portal app_**
+
+`do-customer-start` Run app server and go to [http://localhost:3001/].
+
+`do--customer-build` Build support portal app from TS to JS.
+
+`do--customer-linting` Check code style for support portal.
+
+`do-support-portal-test` Run unit test for support portal.
+
+`do-support-portal-deploy` Deploy support portal.
+
+**_4. Seeding_**
+
+(TBD)

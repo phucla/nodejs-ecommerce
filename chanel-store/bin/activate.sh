@@ -11,8 +11,8 @@ export CUSTOMER_PORTAL="customer-portal"
 
 # Run unit test
 function do-app-start() {
-    local appName=$1
-    npm run start ${appName}
+  local appName=$1
+  npm run start ${appName}
 }
 
 # Start customer app
@@ -21,7 +21,7 @@ function do-customer-start() {
 }
 
 # Start store manager app
-function do-store-manager-start() {
+function do-store-start() {
   do-app-start ${STORE_PORTAL}
 }
 
@@ -36,8 +36,8 @@ function do-admin-start() {
 
 # Run unit test
 function do-app-test() {
-    local appName=$1
-    npm run test ${appName}
+  local appName=$1
+  npm run test ${appName}
 }
 
 # Run testing for customer app
@@ -46,7 +46,7 @@ function do-customer-test() {
 }
 
 # Run testing for store manager app
-function do-store-manager-test() {
+function do-store-test() {
   do-app-test ${STORE_PORTAL}
 }
 
@@ -61,8 +61,8 @@ function do-admin-test() {
 
 # Run build app
 function do-app-build() {
-    local appName=$1
-    npm run build ${appName}
+  local appName=$1
+  npm run build ${appName}
 }
 
 # Build customer app
@@ -71,7 +71,7 @@ function do-customer-build() {
 }
 
 # Build store manager app
-function do-store-manager-build() {
+function do-store-build() {
   do-app-build ${STORE_PORTAL}
 }
 
@@ -80,5 +80,54 @@ function do-admin-build() {
   do-app-build ${ADMIN_PORTAL}
 }
 
-echo "env $CMD"
+##############################
+# Create script to run linting
+##############################
+
+# Run linting
+function do-app-linting() {
+  local appName=$1
+  npm run lint ${appName}
+}
+
+# Linting customer app
+function do-customer-linting() {
+  do-app-linting ${CUSTOMER_PORTAL}
+}
+
+# Linting store manager app
+function do-store-linting() {
+  do-app-linting ${STORE_PORTAL}
+}
+
+# Linting for admin app
+function do-admin-linting() {
+  do-app-linting ${ADMIN_PORTAL}
+}
+
+##############################
+# Create script to deploy app
+##############################
+
+# Deploy app
+function do-app-deploy() {
+  local appName=$1
+  echo "Deploy $appName"
+}
+
+# Deploy customer app
+function do-customer-deploy() {
+  do-app-deploy ${CUSTOMER_PORTAL}
+}
+
+# Deploy store manager app
+function do-store-deploy() {
+  do-app-deploy ${STORE_PORTAL}
+}
+
+# Deploy for admin app
+function do-admin-deploy() {
+  do-app-deploy ${ADMIN_PORTAL}
+}
+
 ${CMD}

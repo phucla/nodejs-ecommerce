@@ -1,6 +1,5 @@
 #!/bin/bash
-export CMD=${1:-do-admin-start}
-export MODE='dev'
+export ENVIRONMENT='dev'
 export ADMIN_PORTAL="admin-portal"
 export STORE_PORTAL="store-manager-portal"
 export CUSTOMER_PORTAL="customer-portal"
@@ -129,5 +128,3 @@ function do-store-deploy() {
 function do-admin-deploy() {
   do-app-deploy ${ADMIN_PORTAL}
 }
-
-${CMD}

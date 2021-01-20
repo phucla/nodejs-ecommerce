@@ -28,6 +28,13 @@ Use [Trello](https://trello.com/b/G6qZfbDk) to management task and this is a pri
 - Coverage - Report coverage of unit testing
 - [Seeder](https://developer.aliyun.com/mirror/npm/package/nestjs-seeder) - Initialize fake data
 
+## Versioning
+
+This project using the following versioning:
+
+- Node 14.0.0
+- Npm 6.14.4
+
 ## Development Environment
 
 ### Create environment dot file
@@ -41,6 +48,12 @@ Use [Trello](https://trello.com/b/G6qZfbDk) to management task and this is a pri
 - Follow content of file `.env.sample` and update value mapping with environment configurations.
 
 ### How to run
+
+**Install node module**
+
+```
+npm install
+```
 
 **Source bash file to load helper scripts**
 

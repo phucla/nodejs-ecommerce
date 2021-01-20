@@ -6,7 +6,7 @@ import { getMetadataArgsStorage } from 'typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: [`.env.${process.env.MODE}`],
+      envFilePath: [`.env.${process.env.ENVIRONMENT}`],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({

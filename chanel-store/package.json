@@ -57,7 +57,7 @@
     "eslint": "7.10.0",
     "eslint-config-prettier": "6.0.0",
     "jest": "26.2.2",
-    "lint-staged": "^0.5.3",
+    "lint-staged": "10.2.8",
     "husky": "4.3.7",
     "prettier": "2.2.1",
     "ts-jest": "26.4.0",

@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // External module
 import { Address } from '@chanel-store/customer';
-import { CsCrudEntity } from '@chanel-store/core';
+import { CsCrudEntity, CsCrudPublishedEntity } from '@chanel-store/core';
 import { User } from '@chanel-store/auth';
 
 // Internal
@@ -14,7 +14,7 @@ import { DayOfWeek } from './enums/dayOfWeek.enum';
  * Define the Store entity
  */
 @Entity('Store')
-export class Store extends CsCrudEntity {
+export class Store extends CsCrudPublishedEntity {
   @ApiProperty()
   @Column()
   name: string;
@@ -38,12 +38,6 @@ export class Store extends CsCrudEntity {
   @ApiProperty()
   @Column()
   description: string;
-
-  @ApiProperty()
-  @Column({
-    default: false,
-  })
-  is_published: boolean;
 
   @OneToOne(() => Address, (profile) => profile.id)
   store_address_id: Address;

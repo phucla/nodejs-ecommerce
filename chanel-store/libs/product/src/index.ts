@@ -1,1 +1,1 @@
-export * from './lib/product.module';
+export * from './product.entity';

@@ -63,7 +63,7 @@ export class BusinessHour extends CsCrudEntity {
   close_hour: Date;
 
   @ApiProperty({ enum: Object.values(DayOfWeek) })
-  @Column()
+  @Column('varchar')
   date_of_week: DayOfWeek;
 
   @ManyToOne(() => Store, (store) => store.id)

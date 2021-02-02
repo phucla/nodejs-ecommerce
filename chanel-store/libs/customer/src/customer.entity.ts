@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // Internal
 import { CsCrudEntity } from '@chanel-store/core';
+import { Gender } from './enums/gender.enum';
 
 /**
  * Define the Address entity
@@ -40,9 +41,9 @@ export class Profile extends CsCrudEntity {
   @Column()
   last_name: string;
 
-  @ApiProperty()
-  @Column()
-  gender: string;
+  @ApiProperty({ enum: Object.values(Gender) })
+  @Column('varchar')
+  gender: Gender;
 
   @ApiProperty()
   @Column()

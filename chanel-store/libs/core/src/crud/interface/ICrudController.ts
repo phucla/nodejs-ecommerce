@@ -1,7 +1,7 @@
 // Standard library
 import { DeepPartial } from 'typeorm';
 
-export interface IBaseCrudController<T> {
+export interface ICsCrudController<T> {
   find(req: any): Promise<T[]>;
   findEntityById(id: number, req: any): Promise<T>;
   deleteEntityById(id: number, req: any): Promise<void>;

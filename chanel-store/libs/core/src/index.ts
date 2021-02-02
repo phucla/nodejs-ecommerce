@@ -1,8 +1,8 @@
-export * from './crud/base-crud-entity.service';
-export * from './crud/base-curd-entity.controller';
-export * from './crud/base-crud.entity';
+export * from './crud/crud-entity.service';
+export * from './crud/curd-entity.controller';
+export * from './crud/crud.entity';
 
 // interfaces
-export * from './crud/interface/IBaseCrudController';
-export * from './crud/interface/IBaseCrudEntity';
-export * from './crud/interface/IBaseCrudService';
+export * from './crud/interface/ICrudController';
+export * from './crud/interface/ICrudEntity';
+export * from './crud/interface/ICrudService';

@@ -3,11 +3,11 @@ import { NotFoundException } from '@nestjs/common';
 import { DeepPartial, Repository } from 'typeorm';
 
 // Internal
-import { BaseCrudEntity } from './base-crud.entity';
-import { IBaseCrudService } from './interface/IBaseCrudService';
+import { CsCrudEntity } from './crud.entity';
+import { ICsCrudService } from './interface/ICrudService';
 
-export abstract class BaseCrudEntityService<T extends BaseCrudEntity>
-  implements IBaseCrudService<T> {
+export abstract class CsCrudEntityService<T extends CsCrudEntity>
+  implements ICsCrudService<T> {
   constructor(private repository: Repository<T>) {}
 
   async find(): Promise<T[]> {
@@ -39,7 +39,7 @@ export abstract class BaseCrudEntityService<T extends BaseCrudEntity>
 
   async deleteById(id: number): Promise<void> {
     await this.findById(id);
-    await this.repository.delete(id);
+    await this.repository.softDelete(id);
     return;
   }
 }

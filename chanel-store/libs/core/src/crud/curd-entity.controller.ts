@@ -3,13 +3,13 @@ import { DeepPartial } from 'typeorm';
 import { Body, Param } from '@nestjs/common';
 
 // Internal
-import { IBaseCrudController } from './interface/IBaseCrudController';
-import { BaseCrudEntityService } from './base-crud-entity.service';
-import { BaseCrudEntity } from './base-crud.entity';
+import { ICsCrudController } from './interface/ICrudController';
+import { CsCrudEntityService } from './crud-entity.service';
+import { CsCrudEntity } from './crud.entity';
 
-export abstract class BaseCrudEntityController<T extends BaseCrudEntity>
-  implements IBaseCrudController<T> {
-  constructor(private baseCrudEntityService: BaseCrudEntityService<T>) {}
+export abstract class BaseCrudEntityController<T extends CsCrudEntity>
+  implements ICsCrudController<T> {
+  constructor(private baseCrudEntityService: CsCrudEntityService<T>) {}
 
   async find(): Promise<T[]> {
     return await this.baseCrudEntityService.find();

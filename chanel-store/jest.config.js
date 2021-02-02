@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/libs/product',
     '<rootDir>/libs/customer',
     '<rootDir>/libs/database',
+    '<rootDir>/libs/store',
   ],
 };

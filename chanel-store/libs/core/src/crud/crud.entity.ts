@@ -5,11 +5,15 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   PrimaryGeneratedColumn,
+  Column,
 } from 'typeorm';
 
 // Internal
 import { ICsCrudEntity } from './interface/ICrudEntity';
 
+/**
+ * Define base Crud entity
+ */
 export abstract class CsCrudEntity implements ICsCrudEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
@@ -35,4 +39,16 @@ export abstract class CsCrudEntity implements ICsCrudEntity {
   })
   @DeleteDateColumn()
   deleted_at: Date;
+}
+
+/**
+ * Define base Crud Published entity, the class will add an is_published field to entity
+ */
+
+export abstract class CsCrudPublishedEntity extends CsCrudEntity {
+  @ApiProperty()
+  @Column({
+    default: false,
+  })
+  is_published: boolean;
 }

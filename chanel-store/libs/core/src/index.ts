@@ -6,3 +6,7 @@ export * from './crud/crud.entity';
 export * from './crud/interface/ICrudController';
 export * from './crud/interface/ICrudEntity';
 export * from './crud/interface/ICrudService';
+
+// Pagination
+export * from './pagination/pagination.decorator';
+export * from './pagination/pagination.dto';

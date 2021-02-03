@@ -14,8 +14,25 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return await this.repository.find();
   }
 
+  async findWithDeleted(): Promise<T[]> {
+    return await this.repository.find({ withDeleted: true });
+  }
+
   async findById(id: number): Promise<T> {
     const entiry = await this.repository.findOne({ where: { id } });
+
+    if (entiry) {
+      return entiry;
+    }
+
+    throw new NotFoundException();
+  }
+
+  async findOneWithDeleted(id: number): Promise<T> {
+    const entiry = await this.repository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
 
     if (entiry) {
       return entiry;
@@ -41,5 +58,11 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     await this.findById(id);
     await this.repository.softDelete(id);
     return;
+  }
+
+  async restoreById(id: number): Promise<T> {
+    await this.findOneWithDeleted(id);
+    await this.repository.restore(id);
+    return this.findById(id);
   }
 }

@@ -15,6 +15,14 @@ export abstract class BaseCrudEntityController<T extends CsCrudEntity>
     return await this.baseCrudEntityService.find();
   }
 
+  async findWithDeleted(): Promise<T[]> {
+    return await this.baseCrudEntityService.findWithDeleted();
+  }
+
+  async findEntityWithDeleted(@Param(':id') id: number): Promise<T> {
+    return this.baseCrudEntityService.findOneWithDeleted(id);
+  }
+
   async findEntityById(@Param(':id') id: number): Promise<T> {
     return this.baseCrudEntityService.findById(id);
   }
@@ -32,5 +40,9 @@ export abstract class BaseCrudEntityController<T extends CsCrudEntity>
     @Body() entity: DeepPartial<T>
   ): Promise<T> {
     return this.baseCrudEntityService.updateById(id, entity);
+  }
+
+  async restoreEntityById(@Param(':id') id: number): Promise<T> {
+    return this.baseCrudEntityService.restoreById(id);
   }
 }

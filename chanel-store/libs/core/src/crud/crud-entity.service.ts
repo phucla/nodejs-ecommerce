@@ -4,7 +4,7 @@ import { DeepPartial, Repository } from 'typeorm';
 
 // Internal
 import { CsCrudEntity } from './crud.entity';
-import { ICsCrudService } from './interface/ICrudService';
+import { ICsCrudService } from './interface/crud-service.interface';
 
 export abstract class CsCrudEntityService<T extends CsCrudEntity>
   implements ICsCrudService<T> {

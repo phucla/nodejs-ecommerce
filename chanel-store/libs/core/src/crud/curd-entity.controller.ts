@@ -3,7 +3,7 @@ import { DeepPartial } from 'typeorm';
 import { Body, Param } from '@nestjs/common';
 
 // Internal
-import { ICsCrudController } from './interface/ICrudController';
+import { ICsCrudController } from './interface/crud-controller.interface';
 import { CsCrudEntityService } from './crud-entity.service';
 import { CsCrudEntity } from './crud.entity';
 

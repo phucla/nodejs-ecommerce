@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 // Internal
-import { ICsCrudEntity } from './interface/ICrudEntity';
+import { ICsCrudEntity } from './interface/crud-entity.interface';
 
 /**
  * Define base Crud entity

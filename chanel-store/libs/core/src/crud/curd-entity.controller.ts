@@ -5,7 +5,8 @@ import {
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
-  ApiFoundResponse,
+  ApiOkResponse,
+  ApiBody,
 } from '@nestjs/swagger';
 
 // Internal
@@ -39,21 +40,27 @@ export function getCsCrudController<T extends CsCrudEntity>(
     constructor(private baseCrudEntityService: CsCrudEntityService<T>) {}
 
     @Get()
+    @ApiOperation({
+      summary: 'Find a entities',
+    })
+    @ApiOkResponse({
+      description: 'Data for find a entities',
+      isArray: true,
+      type: Entity,
+    })
     async find(): Promise<T[]> {
       return await this.baseCrudEntityService.find();
     }
 
-    @Get()
-    async findWithDeleted(): Promise<T[]> {
-      return await this.baseCrudEntityService.findWithDeleted();
-    }
-
     @Get(':id')
-    async findEntityWithDeleted(@Param(':id') id: number): Promise<T> {
-      return this.baseCrudEntityService.findOneWithDeleted(id);
-    }
-
-    @Get(':id')
+    @ApiOperation({
+      summary: 'Find a entity by id',
+    })
+    @ApiOkResponse({
+      description: 'Data for find a entity',
+      isArray: false,
+      type: Entity,
+    })
     async findEntityById(@Param(':id') id: number): Promise<T> {
       return this.baseCrudEntityService.findById(id);
     }
@@ -70,6 +77,9 @@ export function getCsCrudController<T extends CsCrudEntity>(
     @ApiCreatedResponse({
       description: 'Data for entity creation',
       isArray: false,
+      type: Entity,
+    })
+    @ApiBody({
       type: CreateEntityDto,
     })
     async createEntity(@Body() entity: DeepPartial<T>): Promise<T> {
@@ -80,9 +90,12 @@ export function getCsCrudController<T extends CsCrudEntity>(
     @ApiOperation({
       summary: 'Update a entity',
     })
-    @ApiFoundResponse({
+    @ApiOkResponse({
       description: 'Data for entity update',
-      type: EntityUpdateDto,
+      type: Entity,
+    })
+    @ApiBody({
+      type: CreateEntityDto,
     })
     async updateEntityById(
       @Param(':id') id: number,

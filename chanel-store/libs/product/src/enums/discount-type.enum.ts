@@ -2,6 +2,6 @@
  * Define enum for discount type
  */
 export enum DiscountType {
-  Customer,
-  Product,
+  Customer = 'Customer',
+  Product = 'Product',
 }

@@ -8,7 +8,7 @@ import { CsCrudEntity, CsCrudPublishedEntity } from '@chanel-store/core';
 import { User } from '@chanel-store/auth';
 
 // Internal
-import { DayOfWeek } from './enums/dayOfWeek.enum';
+import { DayOfWeek } from './enums/day-of-week.enum';
 
 /**
  * Define the Store entity

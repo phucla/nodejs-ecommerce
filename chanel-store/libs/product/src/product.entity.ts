@@ -8,11 +8,11 @@ import { Store, ShippingAddress } from '@chanel-store/store';
 import { User } from '@chanel-store/auth';
 
 // Internal
-import { DiscountType } from './enums/discountType.enum';
-import { ProductType } from './enums/productType.enum';
-import { OrderStatus } from './enums/orderStatus.enum';
+import { DiscountType } from './enums/discount-type.enum';
+import { ProductType } from './enums/product-type.enum';
+import { OrderStatus } from './enums/order-status.enum';
 import { ProductRating } from './enums/rating.enum';
-import { MediaType } from './enums/mediaType.enum';
+import { MediaType } from './enums/media-type.enum';
 
 /**
  * Define the Category entity

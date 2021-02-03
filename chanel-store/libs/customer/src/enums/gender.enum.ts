@@ -2,7 +2,7 @@
  * Define enum for Gender
  */
 export enum Gender {
-  Male,
-  Female,
-  Other,
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
 }

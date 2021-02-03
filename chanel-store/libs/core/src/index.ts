@@ -10,3 +10,6 @@ export * from './crud/interface/crud-service.interface';
 // Pagination
 export * from './pagination/pagination.decorator';
 export * from './pagination/pagination.dto';
+
+// exception
+export * from './exception/global.exception';

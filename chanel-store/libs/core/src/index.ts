@@ -13,3 +13,6 @@ export * from './pagination/pagination.dto';
 
 // exception
 export * from './exception/global.exception';
+
+// Utils
+export * from './utils/filter-metadata-factory';

@@ -9,5 +9,4 @@ export interface ICsCrudController<T> {
   deleteEntityById(id: number, req: any): Promise<void>;
   createEntity(entity: DeepPartial<T>, req: any): Promise<T>;
   updateEntityById(id: number, entity: DeepPartial<T>, req: any): Promise<T>;
-  restoreEntityById(id: number, req: any): Promise<T>;
 }

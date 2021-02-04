@@ -95,7 +95,7 @@ export function getCsCrudController<T extends CsCrudEntity>(
       type: Entity,
     })
     @ApiBody({
-      type: CreateEntityDto,
+      type: EntityUpdateDto,
     })
     async updateEntityById(
       @Param(':id') id: number,

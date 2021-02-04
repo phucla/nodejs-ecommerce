@@ -14,26 +14,42 @@ import { Role } from './enums/role.enum';
  */
 @Entity('User')
 export class User extends CsCrudEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'example@email.com',
+    required: true,
+  })
   @Column('varchar', {
     unique: true,
   })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'username',
+    required: true,
+  })
   @Column('varchar', {
     unique: true,
   })
   user_name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'password',
+    required: true,
+  })
   @Column()
   password: string;
 
   @OneToOne(() => Profile, (profile) => profile.id)
   profile_id: Profile;
 
-  @ApiProperty({ enum: Object.values(Role) })
+  @ApiProperty({
+    type: Role,
+    enum: Object.values(Role),
+    example: Role.StoreManager,
+  })
   @Column('varchar')
   role: Role;
 }

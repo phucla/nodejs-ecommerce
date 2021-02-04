@@ -4,8 +4,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 // External module
 import { CsCrudEntity, CsCrudPublishedEntity } from '@chanel-store/core';
-import { Store, ShippingAddress } from '@chanel-store/store';
-import { User } from '@chanel-store/auth';
+import { Store } from '@chanel-store/store';
+import { User, ShippingAddress } from '@chanel-store/shared';
 
 // Internal
 import { DiscountType } from './enums/discount-type.enum';
@@ -19,11 +19,17 @@ import { MediaType } from './enums/media-type.enum';
  */
 @Entity('Category')
 export class Category extends CsCrudPublishedEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Eyewear',
+  })
   @Column()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Eyewear category',
+  })
   @Column()
   description: string;
 
@@ -41,11 +47,17 @@ export class Category extends CsCrudPublishedEntity {
  */
 @Entity('Product')
 export class Product extends CsCrudPublishedEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Eyewear',
+  })
   @Column()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Eyewear product',
+  })
   @Column()
   description: string;
 
@@ -53,7 +65,10 @@ export class Product extends CsCrudPublishedEntity {
   @Column()
   media_id: Media;
 
-  @ApiProperty({ enum: Object.values(ProductType) })
+  @ApiProperty({
+    enum: Object.values(ProductType),
+    example: ProductType.Eyewear,
+  })
   @Column('varchar')
   product_type: ProductType;
 
@@ -71,35 +86,59 @@ export class Product extends CsCrudPublishedEntity {
  */
 @Entity('Discount')
 export class Discount extends CsCrudPublishedEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'DC001',
+  })
   @Column()
   code: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
   @Column()
   is_percent: boolean;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 50,
+  })
   @Column()
   value: number;
 
-  @ApiProperty({ enum: Object.values(DiscountType) })
+  @ApiProperty({
+    enum: Object.values(DiscountType),
+    example: DiscountType.Customer,
+  })
   @Column('varchar')
   type: DiscountType;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Date,
+    example: 'YYYY-MM-DDTHH:MM:SS.mmmZ',
+  })
   @Column()
   start_at: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Date,
+    example: 'YYYY-MM-DDTHH:MM:SS.mmmZ',
+  })
   @Column()
   expire_at: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 10,
+  })
   @Column()
   max_uses: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Product description',
+  })
   @Column()
   description: string;
 
@@ -117,7 +156,10 @@ export class Order extends CsCrudEntity {
   @Column()
   customer_id: User;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 1000,
+  })
   @Column()
   total_price: number;
 
@@ -125,7 +167,10 @@ export class Order extends CsCrudEntity {
   @Column()
   shipping_address_id: ShippingAddress;
 
-  @ApiProperty({ enum: Object.values(OrderStatus) })
+  @ApiProperty({
+    enum: Object.values(OrderStatus),
+    example: OrderStatus.Processing,
+  })
   @Column('varchar')
   status: OrderStatus;
 }
@@ -143,7 +188,10 @@ export class OrderItem extends CsCrudEntity {
   @Column()
   order_id: Order;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
   @Column()
   quantity: number;
 
@@ -151,7 +199,10 @@ export class OrderItem extends CsCrudEntity {
   @Column()
   discount_id: Discount;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 200,
+  })
   @Column()
   discount_price: number;
 }
@@ -165,23 +216,38 @@ export class ProductSku extends CsCrudEntity {
   @Column()
   product_id: Product;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
   @Column()
   price: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
   @Column()
   quantity: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'ABC1234',
+  })
   @Column()
   sku: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
   @Column()
   cost_price: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
   @Column()
   retail_price: number;
 }
@@ -195,7 +261,10 @@ export class Variant extends CsCrudEntity {
   @Column()
   product_id: Product;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Color',
+  })
   @Column()
   name: string;
 }
@@ -209,7 +278,10 @@ export class VariantValue extends CsCrudEntity {
   @Column()
   variant_id: Variant;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Red',
+  })
   @Column()
   name: string;
 }
@@ -249,11 +321,17 @@ export class CustomerFeedback extends CsCrudEntity {
   @Column()
   product_id: Product;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Customer feedback',
+  })
   @Column()
   content: string;
 
-  @ApiProperty({ enum: Object.values(ProductRating) })
+  @ApiProperty({
+    enum: Object.values(ProductRating),
+    example: ProductRating.Five,
+  })
   @Column()
   star: ProductRating;
 }
@@ -263,27 +341,42 @@ export class CustomerFeedback extends CsCrudEntity {
  */
 @Entity('Media')
 export class Media extends CsCrudEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'https://image.com',
+  })
   @Column()
   url: string;
 
-  @ApiProperty({ enum: Object.values(MediaType) })
+  @ApiProperty({ enum: Object.values(MediaType), example: MediaType.Image })
   @Column()
   type: MediaType;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Eyewear',
+  })
   @Column()
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Description',
+  })
   @Column()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 1,
+  })
   @Column()
   position: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'https://image.com',
+  })
   @Column()
   thumb: string;
 }
@@ -325,7 +418,10 @@ export class CartItem extends CsCrudEntity {
   @Column()
   product_id: Product;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 2,
+  })
   @Column()
   quantity: number;
 }

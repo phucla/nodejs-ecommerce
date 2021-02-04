@@ -3,9 +3,8 @@ import { Entity, Column, OneToOne, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // External module
-import { Address } from '@chanel-store/customer';
+import { Address } from '@chanel-store/shared';
 import { CsCrudEntity, CsCrudPublishedEntity } from '@chanel-store/core';
-import { User } from '@chanel-store/auth';
 
 // Internal
 import { DayOfWeek } from './enums/day-of-week.enum';
@@ -63,18 +62,4 @@ export class BusinessHour extends CsCrudEntity {
   @ManyToOne(() => Store, (store) => store.id)
   @Column()
   store_id: Store;
-}
-
-/**
- * Define the ShippingAddress entity
- */
-@Entity('ShippingAddress')
-export class ShippingAddress extends CsCrudEntity {
-  @ManyToOne(() => User, (user) => user.id)
-  @Column()
-  customer_id: User;
-
-  @OneToOne(() => Address, (address) => address.id)
-  @Column()
-  address_id: Address;
 }

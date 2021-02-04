@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/customer',
     '<rootDir>/libs/database',
     '<rootDir>/libs/store',
+    '<rootDir>/libs/shared',
   ],
 };

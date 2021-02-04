@@ -14,27 +14,45 @@ import { DayOfWeek } from './enums/day-of-week.enum';
  */
 @Entity('Store')
 export class Store extends CsCrudPublishedEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Join Store',
+  })
   @Column()
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 123456,
+  })
   @Column()
   lat: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Number,
+    example: 123456,
+  })
   @Column()
   lng: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: '12345678',
+  })
   @Column()
   phone_number: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'join@gmail.com',
+  })
   @Column()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: String,
+    example: 'Store description',
+  })
   @Column()
   description: string;
 
@@ -47,15 +65,21 @@ export class Store extends CsCrudPublishedEntity {
  */
 @Entity('BusinessHour')
 export class BusinessHour extends CsCrudEntity {
-  @ApiProperty()
+  @ApiProperty({
+    type: Date,
+    example: 'YYYY-MM-DDTHH:MM:SS.mmmZ',
+  })
   @Column('time')
   open_hour: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    type: Date,
+    example: 'YYYY-MM-DDTHH:MM:SS.mmmZ',
+  })
   @Column('time')
   close_hour: Date;
 
-  @ApiProperty({ enum: Object.values(DayOfWeek) })
+  @ApiProperty({ enum: Object.values(DayOfWeek), example: DayOfWeek.Friday })
   @Column('varchar')
   date_of_week: DayOfWeek;
 

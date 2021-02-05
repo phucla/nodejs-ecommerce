@@ -104,7 +104,7 @@ export class Address extends CsCrudEntity {
 @Entity('ShippingAddress')
 export class ShippingAddress extends CsCrudEntity {
   @ManyToOne(() => User, (user) => user.shippingAddress)
-  user: string;
+  user: User;
 
   @OneToOne(() => Address)
   @JoinColumn()

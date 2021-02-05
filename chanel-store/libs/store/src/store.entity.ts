@@ -1,10 +1,12 @@
 // Standard library
-import { Entity, Column, OneToOne, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToOne, ManyToOne, OneToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // External module
 import { Address } from '@chanel-store/shared';
 import { CsCrudEntity, CsCrudPublishedEntity } from '@chanel-store/core';
+import { Profile } from '@chanel-store/customer';
+import { Category } from '@chanel-store/product';
 
 // Internal
 import { DayOfWeek } from './enums/day-of-week.enum';
@@ -56,8 +58,21 @@ export class Store extends CsCrudPublishedEntity {
   @Column()
   description: string;
 
-  @OneToOne(() => Address, (profile) => profile.id)
+  @OneToOne(() => Address, (address) => address.id)
   store_address_id: Address;
+
+  @OneToMany(() => Profile, (profile) => profile.store, {
+    cascade: true,
+  })
+  profiles: Profile[];
+
+  @OneToMany(() => BusinessHour, (businessHour) => businessHour.store, {
+    cascade: true,
+  })
+  business_hours: BusinessHour[];
+
+  @OneToMany(() => Category, (category) => category.store)
+  categories: Category[];
 }
 
 /**
@@ -83,7 +98,6 @@ export class BusinessHour extends CsCrudEntity {
   @Column('varchar')
   date_of_week: DayOfWeek;
 
-  @ManyToOne(() => Store, (store) => store.id)
-  @Column()
-  store_id: Store;
+  @ManyToOne(() => Store, (store) => store.business_hours)
+  store: Store;
 }

@@ -1,5 +1,12 @@
 // Standard library
-import { Entity, Column, OneToOne, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToOne,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // External module
@@ -33,13 +40,12 @@ export class Category extends CsCrudPublishedEntity {
   @Column()
   description: string;
 
-  @ManyToOne(() => Store, (store) => store.id)
-  @Column()
-  store_id: Store;
+  @ManyToOne(() => Store, (store) => store.categories)
+  store: Store;
 
-  @OneToOne(() => Category, (category) => category.id)
-  @Column()
-  parent_id: Category;
+  @OneToOne(() => Category)
+  @JoinColumn()
+  parent: Category;
 }
 
 /**
@@ -61,9 +67,8 @@ export class Product extends CsCrudPublishedEntity {
   @Column()
   description: string;
 
-  @ManyToOne(() => Media, (media) => media.id)
-  @Column()
-  media_id: Media;
+  @OneToMany(() => Media, (media) => media.id)
+  media: Media[];
 
   @ApiProperty({
     enum: Object.values(ProductType),
@@ -73,12 +78,10 @@ export class Product extends CsCrudPublishedEntity {
   product_type: ProductType;
 
   @ManyToOne(() => Store, (store) => store.id)
-  @Column()
-  store_id: Store;
+  store: Store;
 
   @ManyToOne(() => Category, (categpry) => categpry.id)
-  @Column()
-  category_id: Category;
+  category: Category;
 }
 
 /**
@@ -143,7 +146,6 @@ export class Discount extends CsCrudPublishedEntity {
   description: string;
 
   @ManyToOne(() => User || Product, (target) => target.id)
-  @Column()
   target_id: User | Product;
 }
 
@@ -153,7 +155,6 @@ export class Discount extends CsCrudPublishedEntity {
 @Entity('Order')
 export class Order extends CsCrudEntity {
   @ManyToOne(() => User, (user) => user.id)
-  @Column()
   customer_id: User;
 
   @ApiProperty({
@@ -163,8 +164,8 @@ export class Order extends CsCrudEntity {
   @Column()
   total_price: number;
 
-  @OneToOne(() => ShippingAddress, (address) => address.id)
-  @Column()
+  @OneToOne(() => ShippingAddress)
+  @JoinColumn()
   shipping_address_id: ShippingAddress;
 
   @ApiProperty({
@@ -176,44 +177,11 @@ export class Order extends CsCrudEntity {
 }
 
 /**
- * Define the OrderItem entity
- */
-@Entity('OrderItem')
-export class OrderItem extends CsCrudEntity {
-  @ManyToOne(() => ProductSku, (productSku) => productSku.id)
-  @Column()
-  product_sku_id: ProductSku;
-
-  @ManyToOne(() => Order, (order) => order.id)
-  @Column()
-  order_id: Order;
-
-  @ApiProperty({
-    type: Number,
-    example: 100,
-  })
-  @Column()
-  quantity: number;
-
-  @ManyToOne(() => Discount, (discount) => discount.id)
-  @Column()
-  discount_id: Discount;
-
-  @ApiProperty({
-    type: Number,
-    example: 200,
-  })
-  @Column()
-  discount_price: number;
-}
-
-/**
  * Define the ProductSku entity
  */
 @Entity('ProductSku')
 export class ProductSku extends CsCrudEntity {
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 
   @ApiProperty({
@@ -250,6 +218,40 @@ export class ProductSku extends CsCrudEntity {
   })
   @Column()
   retail_price: number;
+
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.product_sku, {
+    cascade: true,
+  })
+  product_skus: OrderItem[];
+}
+
+/**
+ * Define the OrderItem entity
+ */
+@Entity('OrderItem')
+export class OrderItem extends CsCrudEntity {
+  @ManyToOne(() => ProductSku, (productSku) => productSku.product_skus)
+  product_sku: ProductSku;
+
+  @ManyToOne(() => Order, (order) => order.id)
+  order_id: Order;
+
+  @ApiProperty({
+    type: Number,
+    example: 100,
+  })
+  @Column()
+  quantity: number;
+
+  @ManyToOne(() => Discount, (discount) => discount.id)
+  discount_id: Discount;
+
+  @ApiProperty({
+    type: Number,
+    example: 200,
+  })
+  @Column()
+  discount_price: number;
 }
 
 /**
@@ -258,7 +260,6 @@ export class ProductSku extends CsCrudEntity {
 @Entity('Variant')
 export class Variant extends CsCrudEntity {
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 
   @ApiProperty({
@@ -275,7 +276,6 @@ export class Variant extends CsCrudEntity {
 @Entity('VariantValue')
 export class VariantValue extends CsCrudEntity {
   @ManyToOne(() => Variant, (variant) => variant.id)
-  @Column()
   variant_id: Variant;
 
   @ApiProperty({
@@ -292,19 +292,15 @@ export class VariantValue extends CsCrudEntity {
 @Entity('SkuValue')
 export class SkuValue extends CsCrudEntity {
   @ManyToOne(() => VariantValue, (variantValue) => variantValue.id)
-  @Column()
   variant_value_id: VariantValue;
 
   @ManyToOne(() => Variant, (variant) => variant.id)
-  @Column()
   variant_id: Variant;
 
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 
   @ManyToOne(() => ProductSku, (productSku) => productSku.id)
-  @Column()
   sku_id: ProductSku;
 }
 
@@ -314,11 +310,9 @@ export class SkuValue extends CsCrudEntity {
 @Entity('CustomerFeedback')
 export class CustomerFeedback extends CsCrudEntity {
   @ManyToOne(() => User, (user) => user.id)
-  @Column()
   user_id: User;
 
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 
   @ApiProperty({
@@ -332,7 +326,7 @@ export class CustomerFeedback extends CsCrudEntity {
     enum: Object.values(ProductRating),
     example: ProductRating.Five,
   })
-  @Column()
+  @Column('varchar')
   star: ProductRating;
 }
 
@@ -349,7 +343,7 @@ export class Media extends CsCrudEntity {
   url: string;
 
   @ApiProperty({ enum: Object.values(MediaType), example: MediaType.Image })
-  @Column()
+  @Column('varchar')
   type: MediaType;
 
   @ApiProperty({
@@ -379,6 +373,9 @@ export class Media extends CsCrudEntity {
   })
   @Column()
   thumb: string;
+
+  @ManyToOne(() => Product, (product) => product.media)
+  product: Product;
 }
 
 /**
@@ -387,11 +384,10 @@ export class Media extends CsCrudEntity {
 @Entity('Wishlist')
 export class Wishlist extends CsCrudEntity {
   @OneToOne(() => User, (user) => user.id)
-  @Column()
+  @JoinColumn()
   customer_id: User;
 
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 }
 
@@ -401,7 +397,7 @@ export class Wishlist extends CsCrudEntity {
 @Entity('Cart')
 export class Cart extends CsCrudEntity {
   @OneToOne(() => User, (user) => user.id)
-  @Column()
+  @JoinColumn()
   customer_id: User;
 }
 
@@ -411,11 +407,9 @@ export class Cart extends CsCrudEntity {
 @Entity('CartItem')
 export class CartItem extends CsCrudEntity {
   @ManyToOne(() => Cart, (cart) => cart.id)
-  @Column()
   cart_id: Cart;
 
   @ManyToOne(() => Product, (product) => product.id)
-  @Column()
   product_id: Product;
 
   @ApiProperty({

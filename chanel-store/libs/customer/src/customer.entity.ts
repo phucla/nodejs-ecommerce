@@ -1,5 +1,5 @@
 // Standard library
-import { Entity, Column, OneToOne, OneToMany } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // Internal
@@ -38,18 +38,18 @@ export class Profile extends CsCrudEntity {
   @Column()
   phone_number: string;
 
-  @OneToOne(() => Address, (address) => address.id)
+  @OneToOne(() => Address)
+  @JoinColumn()
   @ApiProperty({
     type: Address,
     example: 1,
   })
-  address_id: Address;
+  address: Address;
 
   @ApiProperty({
     type: Store,
     example: 1,
   })
-  @OneToMany(() => Store, (store) => store.id)
-  @Column()
-  store_id: Store;
+  @ManyToOne(() => Store, (store) => store.profiles)
+  store: Store;
 }

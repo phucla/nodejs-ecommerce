@@ -1,5 +1,12 @@
 // Standard library
-import { Entity, Column, OneToOne, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToOne,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // External module
@@ -58,8 +65,9 @@ export class Store extends CsCrudPublishedEntity {
   @Column()
   description: string;
 
-  @OneToOne(() => Address, (address) => address.id)
-  store_address_id: Address;
+  @OneToOne(() => Address)
+  @JoinColumn()
+  store_address: Address;
 
   @OneToMany(() => Profile, (profile) => profile.store, {
     cascade: true,

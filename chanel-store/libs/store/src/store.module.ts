@@ -13,4 +13,4 @@ import { Store, BusinessHour } from './store.entity';
   providers: [StoreService],
   exports: [],
 })
-export class CustomerModule {}
+export class StoreModule {}

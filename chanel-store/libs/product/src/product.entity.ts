@@ -166,7 +166,7 @@ export class Order extends CsCrudEntity {
 
   @OneToOne(() => ShippingAddress)
   @JoinColumn()
-  shipping_address_id: ShippingAddress;
+  shipping_address: ShippingAddress;
 
   @ApiProperty({
     enum: Object.values(OrderStatus),
@@ -383,9 +383,9 @@ export class Media extends CsCrudEntity {
  */
 @Entity('Wishlist')
 export class Wishlist extends CsCrudEntity {
-  @OneToOne(() => User, (user) => user.id)
+  @OneToOne(() => User)
   @JoinColumn()
-  customer_id: User;
+  customer: User;
 
   @ManyToOne(() => Product, (product) => product.id)
   product_id: Product;
@@ -396,9 +396,9 @@ export class Wishlist extends CsCrudEntity {
  */
 @Entity('Cart')
 export class Cart extends CsCrudEntity {
-  @OneToOne(() => User, (user) => user.id)
+  @OneToOne(() => User)
   @JoinColumn()
-  customer_id: User;
+  customer: User;
 }
 
 /**

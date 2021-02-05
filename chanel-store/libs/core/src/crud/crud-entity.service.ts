@@ -19,10 +19,10 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
   }
 
   async findById(id: number): Promise<T> {
-    const entiry = await this.repository.findOne({ where: { id } });
+    const entity = await this.repository.findOne({ where: { id } });
 
-    if (entiry) {
-      return entiry;
+    if (entity) {
+      return entity;
     }
 
     throw new NotFoundException();

@@ -1,5 +1,12 @@
 // Standard library
-import { Entity, Column, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  OneToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 // External module
@@ -48,6 +55,11 @@ export class User extends CsCrudEntity {
   })
   @Column('varchar')
   role: Role;
+
+  @OneToMany(() => ShippingAddress, (shippingAddress) => shippingAddress.id, {
+    cascade: true,
+  })
+  shippingAddress: ShippingAddress[];
 }
 
 /**
@@ -91,11 +103,10 @@ export class Address extends CsCrudEntity {
  */
 @Entity('ShippingAddress')
 export class ShippingAddress extends CsCrudEntity {
-  @ManyToOne(() => User, (user) => user.id)
-  @Column()
-  customer_id: User;
+  @ManyToOne(() => User, (user) => user.shippingAddress)
+  user: string;
 
-  @OneToOne(() => Address, (address) => address.id)
-  @Column()
-  address_id: Address;
+  @OneToOne(() => Address)
+  @JoinColumn()
+  address: Address;
 }

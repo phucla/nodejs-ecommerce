@@ -8,9 +8,9 @@ import { SharedService } from './shared.service';
 import { User, Address, ShippingAddress } from './shared.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Address, ShippingAddress])],
+  imports: [TypeOrmModule.forFeature([User, ShippingAddress, Address])],
   controllers: [SharedController],
   providers: [SharedService],
   exports: [],
 })
-export class CustomerModule {}
+export class SharedModule {}

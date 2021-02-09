@@ -23,6 +23,8 @@
     "auth": { "tags": [] },
     "product": { "tags": [] },
     "customer": { "tags": [] },
-    "database": { "tags": [] }
+    "database": { "tags": [] },
+    "store": { "tags": [] },
+    "shared": { "tags": [] }
   }
 }

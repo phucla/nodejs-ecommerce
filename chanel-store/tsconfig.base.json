@@ -19,7 +19,9 @@
       "@chanel-store/auth": ["libs/auth/src/index.ts"],
       "@chanel-store/product": ["libs/product/src/index.ts"],
       "@chanel-store/customer": ["libs/customer/src/index.ts"],
-      "@chanel-store/database": ["libs/database/src/index.ts"]
+      "@chanel-store/database": ["libs/database/src/index.ts"],
+      "@chanel-store/store": ["libs/store/src/index.ts"],
+      "@chanel-store/shared": ["libs/shared/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

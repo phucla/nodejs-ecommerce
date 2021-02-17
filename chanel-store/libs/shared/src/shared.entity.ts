@@ -69,14 +69,14 @@ export class User extends CsCrudEntity {
 export class Address extends CsCrudEntity {
   @ApiProperty({
     type: String,
-    example: '123 apt, new york',
+    example: '123 apt, New York',
   })
   @Column()
   address: string;
 
   @ApiProperty({
     type: String,
-    example: 'New york',
+    example: 'New York',
   })
   @Column()
   city: string;

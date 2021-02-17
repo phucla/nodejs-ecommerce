@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CsCrudEntity } from '@chanel-store/core';
 import { Gender } from './enums/gender.enum';
 import { Store } from '@chanel-store/store';
-import { Address } from '@chanel-store/shared';
+import { Address, User } from '@chanel-store/shared';
 
 /**
  * Define the Profile entity
@@ -45,6 +45,14 @@ export class Profile extends CsCrudEntity {
     example: 1,
   })
   address: Address;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  @ApiProperty({
+    type: User,
+    example: 1,
+  })
+  user: User;
 
   @ApiProperty({
     type: Store,

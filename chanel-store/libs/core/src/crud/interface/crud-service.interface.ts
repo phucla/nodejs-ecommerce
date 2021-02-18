@@ -1,8 +1,8 @@
 // Standard library
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, FindManyOptions } from 'typeorm';
 
 export interface ICsCrudService<T> {
-  find(): Promise<T[]>;
+  find(options?: FindManyOptions<T>): Promise<T[]>;
   findWithDeleted(): Promise<T[]>;
   findById(id: number): Promise<T>;
   findOneWithDeleted(id: number): Promise<T>;

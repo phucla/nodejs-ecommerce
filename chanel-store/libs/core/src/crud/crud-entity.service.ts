@@ -1,6 +1,6 @@
 // Standard library
 import { NotFoundException } from '@nestjs/common';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, Repository, FindManyOptions } from 'typeorm';
 
 // Internal
 import { CsCrudEntity } from './crud.entity';
@@ -10,8 +10,8 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
   implements ICsCrudService<T> {
   constructor(private repository: Repository<T>) {}
 
-  async find(): Promise<T[]> {
-    return await this.repository.find();
+  async find(options?: FindManyOptions<T>): Promise<T[]> {
+    return await this.repository.find(options);
   }
 
   async findWithDeleted(): Promise<T[]> {

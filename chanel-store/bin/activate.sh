@@ -3,6 +3,7 @@ export ENVIRONMENT='dev'
 export ADMIN_PORTAL="admin-portal"
 export STORE_PORTAL="store-manager-portal"
 export CUSTOMER_PORTAL="customer-portal"
+export DEBUGGING="debugging"
 
 ##############################
 # Create script to start app
@@ -22,6 +23,11 @@ function do-customer-start() {
 # Start store manager app
 function do-store-start() {
   do-app-start ${STORE_PORTAL}
+}
+
+# Start store manager app
+function do-debug-start() {
+  do-app-start ${DEBUGGING}
 }
 
 # Start admin app

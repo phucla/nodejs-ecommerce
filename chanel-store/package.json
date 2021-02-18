@@ -24,7 +24,8 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "pretypeorm": "ts-node -r tsconfig-paths/register apps/admin-portal/seed.ts"
   },
   "private": true,
   "dependencies": {

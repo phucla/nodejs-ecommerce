@@ -9,7 +9,12 @@ import { User } from '@chanel-store/shared';
 
 // Internal module
 import { AppService } from './app.service';
-import { CreateDebuggingStoreDto, CreateDebuggingUserDto } from './app.dto';
+import {
+  CreateDebuggingStoreDto,
+  CreateDebuggingUserDto,
+  CreateDebuggingCategoryDto,
+} from './app.dto';
+import { Category, Product } from '@chanel-store/product';
 
 @Controller('debugging')
 export class AppController {
@@ -41,5 +46,35 @@ export class AppController {
   })
   async createUsers(@Body() body: CreateDebuggingUserDto): Promise<User[]> {
     return this.appService.createUser(body.numberUser);
+  }
+
+  @ApiTags('Product')
+  @Post('create-category')
+  @ApiBody({
+    type: CreateDebuggingCategoryDto,
+  })
+  @ApiOkResponse({
+    description: 'The Category has been successfully created.',
+    isArray: true,
+    type: Product,
+  })
+  async createCategory(
+    @Body() body: CreateDebuggingCategoryDto
+  ): Promise<Category[]> {
+    return this.appService.createCategory(
+      body.numberCategory,
+      body.storeId,
+      body.parentId
+    );
+  }
+
+  @ApiTags('Product')
+  @Post('create-product')
+  @ApiOkResponse({
+    description: 'The Product has been successfully created.',
+    type: Product,
+  })
+  async createProduct(): Promise<Product> {
+    return this.appService.createProductWitoutStore();
   }
 }

@@ -20,3 +20,28 @@ export class CreateDebuggingUserDto {
   @IsInt()
   numberUser: number;
 }
+
+export class CreateDebuggingCategoryDto {
+  @ApiProperty({
+    description: 'Number of Category',
+    default: 1,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  numberCategory: number;
+
+  @ApiProperty({
+    description: 'Store Id',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  storeId: number;
+
+  @ApiProperty({
+    description: 'Parent Id',
+    required: false,
+  })
+  @IsInt()
+  parentId: number;
+}

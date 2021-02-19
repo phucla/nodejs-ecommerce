@@ -56,7 +56,7 @@ export class AppController {
   @ApiOkResponse({
     description: 'The Category has been successfully created.',
     isArray: true,
-    type: Product,
+    type: Category,
   })
   async createCategory(
     @Body() body: CreateDebuggingCategoryDto

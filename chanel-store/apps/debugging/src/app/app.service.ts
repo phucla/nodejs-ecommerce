@@ -1,6 +1,6 @@
 // Standard library
 import { createHmac } from 'crypto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as Faker from 'faker';
 
 // External module
@@ -38,6 +38,7 @@ import { Gender } from 'libs/customer/src/enums/gender.enum';
 @Injectable()
 export class AppService {
   constructor(
+    private logger: Logger,
     private userService: UserService,
     private storeService: StoreService,
     private businessHourService: BusinessHourService,
@@ -49,6 +50,7 @@ export class AppService {
     private variantService: VariantService,
     private variantValueService: VariantValueService
   ) {}
+  private DEFAULT_PASSWORD = 'abcd@1234';
 
   /**
    * Init data
@@ -59,7 +61,7 @@ export class AppService {
     for (const store of stores) {
       this.createStoreManager(3, store);
     }
-    await this.createUser();
+    await this.createUser(10);
   }
 
   async getUser() {
@@ -73,7 +75,7 @@ export class AppService {
     const admin: IUser = {
       email: 'admin@test.com',
       user_name: 'admin',
-      password: createHmac(CREATE_HMAC_KEY, 'abcd@1234').digest(
+      password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
         CREATE_HMAC_DIGEST
       ),
       role: Role.Admin,
@@ -85,14 +87,17 @@ export class AppService {
   /**
    * Create Store manager account
    */
-  async createStoreManager(numberManager: number, store: Store): Promise<void> {
+  async createStoreManager(
+    numberOfManagers: number,
+    store: Store
+  ): Promise<void> {
     const latestId = await this._getLatestId(this.userService);
 
-    for (let i = 0; i < numberManager; i++) {
+    for (let i = 0; i < numberOfManagers; i++) {
       const storeManagerDto: IUser = {
         email: `store${latestId + i + 1}@test.com`,
         user_name: `store${latestId + i + 1}`,
-        password: createHmac(CREATE_HMAC_KEY, 'abcd@1234').digest(
+        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
           CREATE_HMAC_DIGEST
         ),
         role: Role.StoreManager,
@@ -111,34 +116,28 @@ export class AppService {
   /**
    * Create User data
    */
-  async createUser(): Promise<void> {
-    const users = [
-      {
-        email: 'user01@test.com',
-        userName: 'user01',
-      },
-      {
-        email: 'user02@test.com',
-        userName: 'user02',
-      },
-      {
-        email: 'store03@test.com',
-        userName: 'user03',
-      },
-    ];
-
-    for (const user of users) {
-      const userData = {
-        email: user.email,
-        user_name: user.userName,
-        password: createHmac(CREATE_HMAC_KEY, 'abcd@1234').digest(
+  async createUser(numberOfUsers: number): Promise<User[]> {
+    this.logger.debug('Start create User');
+    const latestId = await this._getLatestId(this.userService);
+    const users: User[] = [];
+    for (let i = 0; i < numberOfUsers; i++) {
+      const userDto: IUser = {
+        email: `user${latestId + i + 1}@test.com`,
+        user_name: `user${latestId + i + 1}`,
+        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
           CREATE_HMAC_DIGEST
         ),
         role: Role.User,
       };
 
-      await this.userService.create(userData);
+      const userResponse = await this.userService.create(userDto);
+      users.push(userResponse);
+
+      // Create profile of User
+      this.createProfile(userResponse);
     }
+    this.logger.debug('The Users has been successfully created');
+    return users;
   }
 
   /**

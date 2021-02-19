@@ -1,5 +1,5 @@
 // Standard library
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 
 // Libs
 import { DatabaseModule } from '@chanel-store/database';
@@ -21,7 +21,7 @@ import { AppService } from './app.service';
     ProductModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Logger],
   exports: [],
 })
 export class AppModule {}

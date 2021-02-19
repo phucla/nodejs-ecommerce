@@ -8,6 +8,6 @@ export class ProductController {
 
   @Get()
   getData() {
-    return this.appService.getData();
+    return { message: 'Ok' };
   }
 }

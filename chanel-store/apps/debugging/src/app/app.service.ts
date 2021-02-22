@@ -81,17 +81,62 @@ export class AppService {
   /**
    * Init data
    */
-  async initData() {
+  async initData(): Promise<void> {
     await this.createRootAdmin();
     const stores = await this.createStores(2);
     for (const store of stores) {
       this.createStoreManager(3, store.id);
+      const categories: Category[] = await this.createCategory(3, store);
+      await this.createProduct(store, Faker.random.arrayElement(categories));
     }
-    await this.createUser(10);
+    const users: User[] = await this.createUser(10);
+    await this.createOrders(10, Faker.random.arrayElement(users).id);
   }
 
-  async getUser() {
-    return await this._getLatestId(this.userService);
+  async removeData(): Promise<void> {
+    this.removeOrders();
+    this.removeUsers(Role.User);
+  }
+
+  async removeOrders(orderIds?: number[]): Promise<void> {
+    if (!orderIds) {
+      await this.shippingAddressService.bulkDelete();
+      await this.orderItemService.bulkDelete();
+      await this.orderService.bulkDelete();
+      return;
+    }
+
+    // Remove order item
+    for (const orderId of orderIds) {
+      await this.orderItemService.bulkDelete({
+        order: {
+          id: orderId,
+        },
+      });
+    }
+
+    // Remove orders
+    await this.orderService.bulkDelete(orderIds);
+  }
+
+  async removeUsers(role: Role, userIds?: number[]): Promise<void> {
+    if (!userIds) {
+      const users: User[] = await this.userService.find({
+        where: {
+          role,
+        },
+      });
+
+      for (const user of users) {
+        await this.userService.hardDelete(user.id);
+      }
+      return;
+    }
+
+    // Remove order item
+    for (const userId of userIds) {
+      await this.userService.hardDelete(userId);
+    }
   }
 
   /**
@@ -127,38 +172,6 @@ export class AppService {
       numberOfManagers,
       store
     );
-    return managers;
-  }
-
-  /**
-   * Create Store manager account
-   */
-  private async _createStoreManager(
-    numberOfManagers: number,
-    store: Store
-  ): Promise<User[]> {
-    const latestId = await this._getLatestId(this.userService);
-    const managers: User[] = [];
-
-    for (let i = 0; i < numberOfManagers; i++) {
-      const storeManagerDto: IUser = {
-        email: `store${latestId + i + 1}@test.com`,
-        user_name: `store${latestId + i + 1}`,
-        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
-          CREATE_HMAC_DIGEST
-        ),
-        role: Role.StoreManager,
-      };
-
-      // Create Store manager
-      const storeMangerResponse = await this.userService.create(
-        storeManagerDto
-      );
-      managers.push(storeMangerResponse);
-
-      // Create profile of Store manager
-      this.createProfile(storeMangerResponse, store);
-    }
     return managers;
   }
 
@@ -358,34 +371,6 @@ export class AppService {
   }
 
   /**
-   * Create Product
-   * @param store
-   * @param category
-   */
-  private async _createProduct(
-    numberOfProduct: number,
-    store: Store,
-    category: Category
-  ): Promise<Product[]> {
-    const products: Product[] = [];
-
-    for (let i = 0; i < numberOfProduct; i++) {
-      const productDto: IProduct = {
-        name: Faker.commerce.productName(),
-        description: Faker.commerce.productDescription(),
-        product_type: Faker.random.arrayElement(Object.values(ProductType)),
-        store: store,
-        category: category,
-        is_published: true,
-      };
-
-      const product = await this.productService.create(productDto);
-      products.push(product);
-    }
-    return products;
-  }
-
-  /**
    * Create Product SKU
    * @param product
    */
@@ -472,24 +457,6 @@ export class AppService {
     await this.skuValueService.create(skuValueDto);
   }
 
-  private async _getLatestId(
-    service: ICsCrudService<CsCrudEntity>
-  ): Promise<number> {
-    const entities = await service.find({
-      skip: 0,
-      take: 1,
-      order: {
-        id: 'DESC',
-      },
-    });
-
-    if (entities.length) {
-      return entities[0].id;
-    }
-
-    return 0;
-  }
-
   async createOrders(
     numberOrder: number,
     customerId: number
@@ -547,8 +514,81 @@ export class AppService {
     }
   }
 
-  async getOrders() {
-    const orders = await this.orderService.getOrder(1);
-    return orders;
+  /**
+   * Create Store manager account
+   */
+  private async _createStoreManager(
+    numberOfManagers: number,
+    store: Store
+  ): Promise<User[]> {
+    const latestId = await this._getLatestId(this.userService);
+    const managers: User[] = [];
+
+    for (let i = 0; i < numberOfManagers; i++) {
+      const storeManagerDto: IUser = {
+        email: `store${latestId + i + 1}@test.com`,
+        user_name: `store${latestId + i + 1}`,
+        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
+          CREATE_HMAC_DIGEST
+        ),
+        role: Role.StoreManager,
+      };
+
+      // Create Store manager
+      const storeMangerResponse = await this.userService.create(
+        storeManagerDto
+      );
+      managers.push(storeMangerResponse);
+
+      // Create profile of Store manager
+      this.createProfile(storeMangerResponse, store);
+    }
+    return managers;
+  }
+
+  private async _getLatestId(
+    service: ICsCrudService<CsCrudEntity>
+  ): Promise<number> {
+    const entities = await service.find({
+      skip: 0,
+      take: 1,
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    if (entities.length) {
+      return entities[0].id;
+    }
+
+    return 0;
+  }
+
+  /**
+   * Create Product
+   * @param store
+   * @param category
+   */
+  private async _createProduct(
+    numberOfProduct: number,
+    store: Store,
+    category: Category
+  ): Promise<Product[]> {
+    const products: Product[] = [];
+
+    for (let i = 0; i < numberOfProduct; i++) {
+      const productDto: IProduct = {
+        name: Faker.commerce.productName(),
+        description: Faker.commerce.productDescription(),
+        product_type: Faker.random.arrayElement(Object.values(ProductType)),
+        store: store,
+        category: category,
+        is_published: true,
+      };
+
+      const product = await this.productService.create(productDto);
+      products.push(product);
+    }
+    return products;
   }
 }

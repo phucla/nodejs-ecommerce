@@ -1,6 +1,11 @@
 // Standard library
 import { NotFoundException } from '@nestjs/common';
-import { DeepPartial, Repository, FindManyOptions } from 'typeorm';
+import {
+  DeepPartial,
+  Repository,
+  FindManyOptions,
+  FindConditions,
+} from 'typeorm';
 
 // Internal
 import { CsCrudEntity } from './crud.entity';
@@ -64,5 +69,13 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     await this.findOneWithDeleted(id);
     await this.repository.restore(id);
     return this.findById(id);
+  }
+
+  async bulkDelete(ids?: number[] | FindConditions<T>) {
+    if (ids) {
+      await this.repository.delete(ids);
+    } else {
+      await this.repository.clear();
+    }
   }
 }

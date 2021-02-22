@@ -11,9 +11,12 @@ import {
   ShippingAddressService,
 } from './shared.service';
 import { User, Address, ShippingAddress } from './shared.entity';
+import { Profile } from '@chanel-store/customer';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, ShippingAddress, Address])],
+  imports: [
+    TypeOrmModule.forFeature([User, ShippingAddress, Address, Profile]),
+  ],
   controllers: [SharedController],
   providers: [
     SharedService,

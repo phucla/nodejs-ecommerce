@@ -1,11 +1,11 @@
 // Standard library
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Body } from '@nestjs/common';
 
 // External module
 import { Store } from '@chanel-store/store';
-import { User } from '@chanel-store/shared';
+import { Role, User } from '@chanel-store/shared';
 
 // Internal module
 import { AppService } from './app.service';
@@ -108,5 +108,20 @@ export class AppController {
   })
   async createOrders(@Body() body: DebuggingOrderDto): Promise<Order[]> {
     return this.appService.createOrders(body.numberOrder, body.customerId);
+  }
+
+  @Post('init-data')
+  async initData(): Promise<void> {
+    this.appService.initData();
+  }
+
+  @Delete('remove-data')
+  async removeAllData() {
+    return this.appService.removeData();
+  }
+
+  @Delete('remove-customers')
+  async removeCustomer() {
+    return this.appService.removeUsers(Role.StoreManager);
   }
 }

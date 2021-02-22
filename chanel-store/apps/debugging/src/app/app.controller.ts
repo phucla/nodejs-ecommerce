@@ -13,6 +13,7 @@ import {
   CreateDebuggingStoreDto,
   CreateDebuggingUserDto,
   CreateDebuggingCategoryDto,
+  DebuggingStoreManagerDto,
 } from './app.dto';
 import { Category, Product } from '@chanel-store/product';
 
@@ -32,6 +33,22 @@ export class AppController {
   })
   async createStores(@Body() body: CreateDebuggingStoreDto): Promise<Store[]> {
     return this.appService.createStores(body.numberStore);
+  }
+
+  @ApiTags('Store')
+  @Post('create-store-manager')
+  @ApiBody({
+    type: DebuggingStoreManagerDto,
+  })
+  @ApiOkResponse({
+    description: 'The Store Manager has been successfully created.',
+    isArray: true,
+    type: User,
+  })
+  async createStoreManager(
+    @Body() body: DebuggingStoreManagerDto
+  ): Promise<User[]> {
+    return this.appService.createStoreManager(body.numberManager, body.storeId);
   }
 
   @ApiTags('User')

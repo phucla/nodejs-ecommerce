@@ -73,7 +73,7 @@ export class AppService {
     await this.createRootAdmin();
     const stores = await this.createStores(2);
     for (const store of stores) {
-      this.createStoreManager(3, store);
+      this.createStoreManager(3, store.id);
     }
     await this.createUser(10);
   }
@@ -98,14 +98,35 @@ export class AppService {
     return await this.userService.create(admin);
   }
 
+  async createStoreManager(
+    numberOfManagers: number,
+    storeId: number
+  ): Promise<User[]> {
+    let store: Store;
+
+    if (storeId) {
+      store = await this.storeService.findById(storeId);
+    } else {
+      const latestStoreId: number = await this._getLatestId(this.storeService);
+      store = await this.storeService.findById(latestStoreId);
+    }
+
+    const managers: User[] = await this._createStoreManager(
+      numberOfManagers,
+      store
+    );
+    return managers;
+  }
+
   /**
    * Create Store manager account
    */
-  async createStoreManager(
+  private async _createStoreManager(
     numberOfManagers: number,
     store: Store
-  ): Promise<void> {
+  ): Promise<User[]> {
     const latestId = await this._getLatestId(this.userService);
+    const managers: User[] = [];
 
     for (let i = 0; i < numberOfManagers; i++) {
       const storeManagerDto: IUser = {
@@ -121,10 +142,12 @@ export class AppService {
       const storeMangerResponse = await this.userService.create(
         storeManagerDto
       );
+      managers.push(storeMangerResponse);
 
       // Create profile of Store manager
       this.createProfile(storeMangerResponse, store);
     }
+    return managers;
   }
 
   /**
@@ -327,7 +350,7 @@ export class AppService {
    * @param store
    * @param category
    */
-  async _createProduct(
+  private async _createProduct(
     numberOfProduct: number,
     store: Store,
     category: Category
@@ -437,7 +460,9 @@ export class AppService {
     await this.skuValueService.create(skuValueDto);
   }
 
-  async _getLatestId(service: ICsCrudService<CsCrudEntity>): Promise<number> {
+  private async _getLatestId(
+    service: ICsCrudService<CsCrudEntity>
+  ): Promise<number> {
     const entities = await service.find({
       skip: 0,
       take: 1,
@@ -453,26 +478,3 @@ export class AppService {
     return 0;
   }
 }
-
-// array = [
-//   {
-//     city: 'A',
-//     name: 'Name 1',
-//   },
-//   {
-//     city: 'A',
-//     name: 'Name 1',
-//   },
-//   {
-//     city: 'A',
-//     name: 'Name 1',
-//   },
-// ];
-
-// for(i = 0; i< array.length, i ++) {
-//   for (j = i+ 1, j < array.length; j++) {
-//      if (duplicate) {
-//        array[j].error ='Error'
-//      }
-//   }
-// }

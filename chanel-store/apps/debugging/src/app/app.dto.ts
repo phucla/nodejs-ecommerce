@@ -45,3 +45,21 @@ export class CreateDebuggingCategoryDto {
   @IsInt()
   parentId: number;
 }
+
+export class DebuggingStoreManagerDto {
+  @ApiProperty({
+    description: 'Number of Store Manager',
+    default: 1,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  numberManager: number;
+
+  @ApiProperty({
+    description: 'Store Id',
+    required: false,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  storeId?: number;
+}

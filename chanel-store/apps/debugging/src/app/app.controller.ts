@@ -1,5 +1,5 @@
 // Standard library
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Body } from '@nestjs/common';
 
@@ -14,8 +14,9 @@ import {
   CreateDebuggingUserDto,
   CreateDebuggingCategoryDto,
   DebuggingStoreManagerDto,
+  DebuggingOrderDto,
 } from './app.dto';
-import { Category, Product } from '@chanel-store/product';
+import { Category, Order, Product } from '@chanel-store/product';
 
 @Controller('debugging')
 export class AppController {
@@ -93,5 +94,19 @@ export class AppController {
   })
   async createProduct(): Promise<Product> {
     return this.appService.createProductWitoutStore();
+  }
+
+  @ApiTags('Order')
+  @Post('create-orders')
+  @ApiBody({
+    type: DebuggingOrderDto,
+  })
+  @ApiOkResponse({
+    description: 'The Orders has been successfully created.',
+    type: Order,
+    isArray: true,
+  })
+  async createOrders(@Body() body: DebuggingOrderDto): Promise<Order[]> {
+    return this.appService.createOrders(body.numberOrder, body.customerId);
   }
 }

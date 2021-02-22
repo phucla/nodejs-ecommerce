@@ -14,6 +14,9 @@ import {
   IUser,
   IAddress,
   Address,
+  ShippingAddress,
+  ShippingAddressService,
+  IShippingAddress,
 } from '@chanel-store/shared';
 import {
   CreateBusinessHourDTO,
@@ -31,17 +34,23 @@ import {
   VariantService,
   VariantValueService,
   SkuValueService,
+  OrderService,
+  OrderItemService,
   ICategory,
   IProduct,
   IProductSku,
   IVariant,
   IVariantValue,
+  ISkuValue,
+  IOrder,
   Category,
   Product,
   ProductSku,
   Variant,
   VariantValue,
-  ISkuValue,
+  Order,
+  OrderStatus,
+  IOrderItem,
 } from '@chanel-store/product';
 import { Gender } from 'libs/customer/src/enums/gender.enum';
 
@@ -62,7 +71,10 @@ export class AppService {
     private productSkuService: ProductSkuService,
     private variantService: VariantService,
     private variantValueService: VariantValueService,
-    private skuValueService: SkuValueService
+    private skuValueService: SkuValueService,
+    private orderService: OrderService,
+    private shippingAddressService: ShippingAddressService,
+    private orderItemService: OrderItemService
   ) {}
   private DEFAULT_PASSWORD = 'abcd@1234';
 
@@ -476,5 +488,67 @@ export class AppService {
     }
 
     return 0;
+  }
+
+  async createOrders(
+    numberOrder: number,
+    customerId: number
+  ): Promise<Order[]> {
+    const customer: User = await this.userService.findById(customerId);
+    const orders: Order[] = [];
+    for (let i = 0; i < numberOrder; i++) {
+      const order = await this._createOrder(customer);
+      orders.push(order);
+      await this._createOrderItem(
+        Faker.random.number({
+          max: 5,
+          min: 1,
+        }),
+        order
+      );
+    }
+    return orders;
+  }
+
+  private async _createOrder(customer: User): Promise<Order> {
+    const address: Address = await this.createAddress();
+    const shippingAddressDto: IShippingAddress = {
+      user: customer,
+      address: address,
+    };
+    const shippingAddress: ShippingAddress = await this.shippingAddressService.create(
+      shippingAddressDto
+    );
+
+    const orderDto: IOrder = {
+      customer: customer,
+      total_price: parseFloat(Faker.commerce.price()),
+      shipping_address: shippingAddress,
+      status: OrderStatus.Processing,
+    };
+
+    const order = await this.orderService.create(orderDto);
+    return order;
+  }
+
+  private async _createOrderItem(
+    numberItems: number,
+    order: Order
+  ): Promise<void> {
+    const productsSku: ProductSku[] = await this.productSkuService.find();
+
+    for (let i = 0; i < numberItems; i++) {
+      const orderItemDto: IOrderItem = {
+        product_sku: Faker.random.arrayElement(productsSku),
+        order: order,
+        quantity: Faker.random.number(10),
+      };
+      await this.orderItemService.create(orderItemDto);
+    }
+  }
+
+  async getOrders() {
+    const orders = await this.orderService.getOrder(1);
+    return orders;
   }
 }

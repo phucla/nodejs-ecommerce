@@ -70,8 +70,8 @@ export interface IOrderItem {
   product_sku: ProductSku;
   order: Order;
   quantity: number;
-  discount: Discount;
-  discount_price: number;
+  discount?: Discount;
+  discount_price?: number;
 }
 
 export interface IVariant {

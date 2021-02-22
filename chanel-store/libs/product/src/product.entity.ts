@@ -250,7 +250,9 @@ export class OrderItem extends CsCrudEntity {
     type: Number,
     example: 200,
   })
-  @Column()
+  @Column({
+    nullable: true,
+  })
   discount_price: number;
 }
 

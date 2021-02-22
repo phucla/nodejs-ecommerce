@@ -63,3 +63,21 @@ export class DebuggingStoreManagerDto {
   @IsInt()
   storeId?: number;
 }
+
+export class DebuggingOrderDto {
+  @ApiProperty({
+    description: 'Number of Order',
+    default: 1,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  numberOrder: number;
+
+  @ApiProperty({
+    description: 'Customer id',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  customerId?: number;
+}

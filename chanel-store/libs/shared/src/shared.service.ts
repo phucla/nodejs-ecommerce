@@ -58,8 +58,16 @@ export class AddressService extends CsCrudEntityService<Address> {
 export class ShippingAddressService extends CsCrudEntityService<ShippingAddress> {
   constructor(
     @InjectRepository(ShippingAddress)
-    private userRepository: Repository<ShippingAddress>
+    private shippingAddressRepository: Repository<ShippingAddress>
   ) {
-    super(userRepository);
+    super(shippingAddressRepository);
+  }
+
+  async findByIds(
+    ids: number[] | ShippingAddress[]
+  ): Promise<ShippingAddress[]> {
+    return await this.shippingAddressRepository.findByIds(ids, {
+      loadRelationIds: true,
+    });
   }
 }

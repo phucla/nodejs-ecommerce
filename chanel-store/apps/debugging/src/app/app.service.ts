@@ -100,9 +100,26 @@ export class AppService {
 
   async removeOrders(orderIds?: number[]): Promise<void> {
     if (!orderIds) {
-      await this.shippingAddressService.bulkDelete();
+      const orders: Order[] = await this.orderService.find({
+        loadRelationIds: true,
+      });
+
+      const shippingAddressIds = orders.map((item) => item.shipping_address);
+      const shippingAddress: ShippingAddress[] = await this.shippingAddressService.findByIds(
+        shippingAddressIds
+      );
+      const addressIds: number[] = shippingAddress.map(
+        (item) => item.address
+      ) as number[];
+
       await this.orderItemService.bulkDelete();
+      this.logger.debug('Order item successfully deleted');
       await this.orderService.bulkDelete();
+      this.logger.debug('Order successfully deleted');
+      await this.shippingAddressService.bulkDelete();
+      this.logger.debug('Shipping address successfully deleted');
+      await this.addressService.bulkDelete(addressIds);
+      this.logger.debug('Address successfully deleted');
       return;
     }
 
@@ -462,6 +479,7 @@ export class AppService {
     customerId: number
   ): Promise<Order[]> {
     const customer: User = await this.userService.findById(customerId);
+    this.logger.debug('customer');
     const orders: Order[] = [];
     for (let i = 0; i < numberOrder; i++) {
       const order = await this._createOrder(customer);

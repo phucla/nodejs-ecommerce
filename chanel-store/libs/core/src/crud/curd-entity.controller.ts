@@ -67,7 +67,7 @@ export function getCsCrudController<T extends CsCrudEntity>(
 
     @Delete(':id')
     async deleteEntityById(@Param(':id') id: number): Promise<void> {
-      return this.baseCrudEntityService.deleteById(id);
+      return this.baseCrudEntityService.delete(id);
     }
 
     @Post()

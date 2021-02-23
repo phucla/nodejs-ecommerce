@@ -108,5 +108,5 @@ export class ShippingAddress extends CsCrudEntity {
 
   @OneToOne(() => Address)
   @JoinColumn()
-  address: Address;
+  address: Address | number;
 }

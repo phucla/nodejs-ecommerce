@@ -22,6 +22,9 @@ import { Category, Order, Product } from '@chanel-store/product';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  /****************************/
+  /** Debugging API of Store */
+  /****************************/
   @ApiTags('Store')
   @Post('create-store')
   @ApiBody({
@@ -52,8 +55,11 @@ export class AppController {
     return this.appService.createStoreManager(body.numberManager, body.storeId);
   }
 
-  @ApiTags('User')
-  @Post('create-user')
+  /******************************/
+  /** Debugging API of Customer */
+  /******************************/
+  @ApiTags('Customer')
+  @Post('customers')
   @ApiBody({
     type: CreateDebuggingUserDto,
   })
@@ -62,8 +68,14 @@ export class AppController {
     isArray: true,
     type: User,
   })
-  async createUsers(@Body() body: CreateDebuggingUserDto): Promise<User[]> {
+  async createCustomers(@Body() body: CreateDebuggingUserDto): Promise<User[]> {
     return this.appService.createUser(body.numberUser);
+  }
+
+  @ApiTags('Customer')
+  @Delete('customers')
+  async removeCustomer(): Promise<void> {
+    return this.appService.removeUsers(Role.StoreManager);
   }
 
   @ApiTags('Product')
@@ -96,8 +108,11 @@ export class AppController {
     return this.appService.createProductWitoutStore();
   }
 
+  /****************************/
+  /** Debugging API of Order */
+  /****************************/
   @ApiTags('Order')
-  @Post('create-orders')
+  @Post('orders')
   @ApiBody({
     type: DebuggingOrderDto,
   })
@@ -107,7 +122,14 @@ export class AppController {
     isArray: true,
   })
   async createOrders(@Body() body: DebuggingOrderDto): Promise<Order[]> {
+    console.log('Create order', body);
     return this.appService.createOrders(body.numberOrder, body.customerId);
+  }
+
+  @ApiTags('Order')
+  @Delete('orders')
+  async removeOrders(): Promise<void> {
+    return this.appService.removeOrders();
   }
 
   @Post('init-data')
@@ -118,10 +140,5 @@ export class AppController {
   @Delete('remove-data')
   async removeAllData() {
     return this.appService.removeData();
-  }
-
-  @Delete('remove-customers')
-  async removeCustomer() {
-    return this.appService.removeUsers(Role.StoreManager);
   }
 }

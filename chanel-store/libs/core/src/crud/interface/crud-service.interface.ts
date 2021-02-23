@@ -1,5 +1,5 @@
 // Standard library
-import { DeepPartial, FindManyOptions } from 'typeorm';
+import { DeepPartial, FindManyOptions, FindConditions } from 'typeorm';
 
 export interface ICsCrudService<T> {
   find(options?: FindManyOptions<T>): Promise<T[]>;
@@ -8,6 +8,7 @@ export interface ICsCrudService<T> {
   findOneWithDeleted(id: number): Promise<T>;
   updateById(id: number, entity: DeepPartial<T>): Promise<T>;
   create(entity: DeepPartial<T>): Promise<T>;
-  deleteById(id: number): Promise<void>;
+  delete(id?: number | number[] | FindConditions<T>): Promise<void>;
   restoreById(id: number): Promise<T>;
+  bulkDelete(ids?: number | number[] | FindConditions<T>): Promise<void>;
 }

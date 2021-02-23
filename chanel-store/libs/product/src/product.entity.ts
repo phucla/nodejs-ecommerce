@@ -174,6 +174,9 @@ export class Order extends CsCrudEntity {
   })
   @Column('varchar')
   status: OrderStatus;
+
+  @OneToMany(() => OrderItem, (item) => item.order)
+  orderItem: OrderItem[];
 }
 
 /**

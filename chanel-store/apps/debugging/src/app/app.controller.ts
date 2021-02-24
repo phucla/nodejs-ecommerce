@@ -10,11 +10,12 @@ import { Role, User } from '@chanel-store/shared';
 // Internal module
 import { AppService } from './app.service';
 import {
-  CreateDebuggingStoreDto,
-  CreateDebuggingUserDto,
-  CreateDebuggingCategoryDto,
+  DebuggingStoreDto,
+  DebuggingUserDto,
+  DebuggingCategoryDto,
   DebuggingStoreManagerDto,
   DebuggingOrderDto,
+  DebuggingProductDto,
 } from './app.dto';
 import { Category, Order, Product } from '@chanel-store/product';
 
@@ -26,21 +27,21 @@ export class AppController {
   /** Debugging API of Store */
   /****************************/
   @ApiTags('Store')
-  @Post('create-store')
+  @Post('store')
   @ApiBody({
-    type: CreateDebuggingStoreDto,
+    type: DebuggingStoreDto,
   })
   @ApiOkResponse({
     description: 'The Store has been successfully created.',
     isArray: true,
     type: Store,
   })
-  async createStores(@Body() body: CreateDebuggingStoreDto): Promise<Store[]> {
+  async createStores(@Body() body: DebuggingStoreDto): Promise<Store[]> {
     return this.appService.createStores(body.numberStore);
   }
 
   @ApiTags('Store')
-  @Post('create-store-manager')
+  @Post('store-manager')
   @ApiBody({
     type: DebuggingStoreManagerDto,
   })
@@ -55,33 +56,39 @@ export class AppController {
     return this.appService.createStoreManager(body.numberManager, body.storeId);
   }
 
+  @ApiTags('Store')
+  @Delete('store-manager')
+  async removeStoreManager(): Promise<void> {
+    return this.appService.removeUsers(Role.StoreManager);
+  }
+
   /******************************/
   /** Debugging API of Customer */
   /******************************/
   @ApiTags('Customer')
   @Post('customers')
   @ApiBody({
-    type: CreateDebuggingUserDto,
+    type: DebuggingUserDto,
   })
   @ApiOkResponse({
     description: 'The Users has been successfully created.',
     isArray: true,
     type: User,
   })
-  async createCustomers(@Body() body: CreateDebuggingUserDto): Promise<User[]> {
+  async createCustomers(@Body() body: DebuggingUserDto): Promise<User[]> {
     return this.appService.createUser(body.numberUser);
   }
 
   @ApiTags('Customer')
   @Delete('customers')
   async removeCustomer(): Promise<void> {
-    return this.appService.removeUsers(Role.StoreManager);
+    return this.appService.removeUsers(Role.User);
   }
 
   @ApiTags('Product')
   @Post('create-category')
   @ApiBody({
-    type: CreateDebuggingCategoryDto,
+    type: DebuggingCategoryDto,
   })
   @ApiOkResponse({
     description: 'The Category has been successfully created.',
@@ -89,7 +96,7 @@ export class AppController {
     type: Category,
   })
   async createCategory(
-    @Body() body: CreateDebuggingCategoryDto
+    @Body() body: DebuggingCategoryDto
   ): Promise<Category[]> {
     return this.appService.createCategory(
       body.numberCategory,
@@ -103,9 +110,10 @@ export class AppController {
   @ApiOkResponse({
     description: 'The Product has been successfully created.',
     type: Product,
+    isArray: true,
   })
-  async createProduct(): Promise<Product> {
-    return this.appService.createProductWitoutStore();
+  async createProduct(@Body() body: DebuggingProductDto): Promise<Product[]> {
+    return this.appService.createProducts(body.numberProduct, body.storeId);
   }
 
   /****************************/
@@ -122,7 +130,6 @@ export class AppController {
     isArray: true,
   })
   async createOrders(@Body() body: DebuggingOrderDto): Promise<Order[]> {
-    console.log('Create order', body);
     return this.appService.createOrders(body.numberOrder, body.customerId);
   }
 

@@ -24,6 +24,7 @@ import {
   StoreService,
   BusinessHourService,
   Store,
+  IStore,
 } from '@chanel-store/store';
 import { IProfile, ProfileService } from '@chanel-store/customer';
 import {
@@ -252,7 +253,7 @@ export class AppService {
       // Create store address
       const address = await this.createAddress();
 
-      const storeData = {
+      const storeData: IStore = {
         name: Faker.company.companyName(),
         lat: Faker.address.latitude(),
         lng: Faker.address.longitude(),
@@ -341,6 +342,34 @@ export class AppService {
     return categories;
   }
 
+  async createProducts(
+    numberOfProducts?: number,
+    storeId?: number
+  ): Promise<Product[]> {
+    const products: Product[] = [];
+    let category: Category;
+    if (!storeId) {
+      for (let i = 0; i < numberOfProducts; i++) {
+        const product: Product = await this.createProductWitoutStore();
+        products.push(product);
+      }
+      return products;
+    }
+
+    const store: Store = await this.storeService.findById(storeId);
+    const categoriId: number = await this._getLatestId(this.categoryService);
+    if (categoriId) {
+      category = await this.categoryService.findById(categoriId);
+    } else {
+      category = await this.createCategory(1, store)[0];
+    }
+    for (let i = 0; i < numberOfProducts; i++) {
+      const product: Product = await this.createProduct(store, category);
+      products.push(product);
+    }
+    return products;
+  }
+
   async createProductWitoutStore(): Promise<Product> {
     let store: Store;
     let category: Category;
@@ -367,6 +396,7 @@ export class AppService {
 
     const products: Product[] = await this._createProduct(1, store, category);
     const product: Product = products[0];
+
     // Create Product Sku
     const variants: Variant[] = await this.createVariant(2, product);
 

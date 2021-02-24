@@ -1,14 +1,14 @@
 // Standard library
 import { Module, Logger } from '@nestjs/common';
 
-// Libs
+// External Libs
 import { DatabaseModule } from '@chanel-store/database';
 import { SharedModule } from '@chanel-store/shared';
 import { CustomerModule } from '@chanel-store/customer';
 import { ProductModule } from '@chanel-store/product';
 import { StoreModule } from '@chanel-store/store';
 
-// Internal
+// Internal module
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 

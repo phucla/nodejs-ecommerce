@@ -1,5 +1,4 @@
 // Standard library
-// External module
 import { filterMetadata } from '@chanel-store/core';
 
 // Internal module

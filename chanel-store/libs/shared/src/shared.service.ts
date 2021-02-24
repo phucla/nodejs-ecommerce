@@ -22,19 +22,6 @@ export class UserService extends CsCrudEntityService<User> {
   ) {
     super(userRepository);
   }
-  async getUserInfo() {
-    const user = await this.findById(29);
-    const profile = await this.profileRepository.find({
-      where: {
-        user,
-      },
-    });
-
-    return {
-      ...user,
-      profile,
-    };
-  }
 
   async hardDelete(id: number): Promise<void> {
     const user = await this.findById(id);

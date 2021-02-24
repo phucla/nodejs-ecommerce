@@ -1,11 +1,17 @@
 // Standard library
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Post,
+  Body,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { Body } from '@nestjs/common';
 
 // External module
 import { Store } from '@chanel-store/store';
 import { Role, User } from '@chanel-store/shared';
+import { LoggingInterceptor } from '@chanel-store/core';
 
 // Internal module
 import { AppService } from './app.service';
@@ -20,6 +26,7 @@ import {
 import { Category, Order, Product } from '@chanel-store/product';
 
 @Controller('debugging')
+@UseInterceptors(LoggingInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

@@ -16,3 +16,6 @@ export * from './exception/global.exception';
 
 // Utils
 export * from './utils/filter-metadata-factory';
+
+// Interceptor
+export * from './interceptor';

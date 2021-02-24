@@ -5,6 +5,7 @@ import {
   Repository,
   FindManyOptions,
   FindConditions,
+  FindOneOptions,
 } from 'typeorm';
 
 // Internal
@@ -25,6 +26,19 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
 
   async findById(id: number): Promise<T> {
     const entity = await this.repository.findOne({ where: { id } });
+
+    if (entity) {
+      return entity;
+    }
+
+    throw new NotFoundException();
+  }
+
+  async findOne(
+    conditions?: FindConditions<T>,
+    options?: FindOneOptions<T>
+  ): Promise<T> {
+    const entity = await this.repository.findOne(conditions, options);
 
     if (entity) {
       return entity;

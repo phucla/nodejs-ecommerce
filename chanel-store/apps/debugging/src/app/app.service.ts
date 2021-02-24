@@ -1,11 +1,9 @@
 // Standard library
-import { createHmac } from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import * as Faker from 'faker';
 
 // External module
 import { CsCrudEntity, ICsCrudService } from '@chanel-store/core';
-import { CREATE_HMAC_KEY, CREATE_HMAC_DIGEST } from '@chanel-store/auth';
 import {
   User,
   Role,
@@ -164,9 +162,7 @@ export class AppService {
     const admin: IUser = {
       email: 'admin@test.com',
       user_name: 'admin',
-      password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
-        CREATE_HMAC_DIGEST
-      ),
+      password: this.DEFAULT_PASSWORD,
       role: Role.Admin,
     };
 
@@ -204,9 +200,7 @@ export class AppService {
       const userDto: IUser = {
         email: `user${latestId + i + 1}@test.com`,
         user_name: `user${latestId + i + 1}`,
-        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
-          CREATE_HMAC_DIGEST
-        ),
+        password: this.DEFAULT_PASSWORD,
         role: Role.User,
       };
 
@@ -576,9 +570,7 @@ export class AppService {
       const storeManagerDto: IUser = {
         email: `store${latestId + i + 1}@test.com`,
         user_name: `store${latestId + i + 1}`,
-        password: createHmac(CREATE_HMAC_KEY, this.DEFAULT_PASSWORD).digest(
-          CREATE_HMAC_DIGEST
-        ),
+        password: this.DEFAULT_PASSWORD,
         role: Role.StoreManager,
       };
 

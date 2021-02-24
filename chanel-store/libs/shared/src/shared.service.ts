@@ -1,5 +1,5 @@
 // Standard libs
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -21,6 +21,13 @@ export class UserService extends CsCrudEntityService<User> {
     private readonly profileRepository: Repository<Profile>
   ) {
     super(userRepository);
+  }
+
+  async findByLogin(username: string, password) {
+    const user: User = await this.findOne({ user_name: username });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   async hardDelete(id: number): Promise<void> {

@@ -7,10 +7,11 @@ import { createHmac } from 'crypto';
 
 // External module
 import { CsCrudEntityService } from '@chanel-store/core';
-import { User } from '@chanel-store/shared';
-
-// Internal module
-import { CREATE_HMAC_KEY, CREATE_HMAC_DIGEST } from './constants/auth.const';
+import {
+  User,
+  CREATE_HMAC_KEY,
+  CREATE_HMAC_DIGEST,
+} from '@chanel-store/shared';
 
 @Injectable()
 export class AuthService extends CsCrudEntityService<User> {
@@ -25,7 +26,7 @@ export class AuthService extends CsCrudEntityService<User> {
    * Find user by user name
    * @param username String
    */
-  async findOne(username: string): Promise<User> {
+  async findByUserName(username: string): Promise<User> {
     const entity = await this.userRepository.findOne({ user_name: username });
     if (entity) {
       return entity;
@@ -39,8 +40,8 @@ export class AuthService extends CsCrudEntityService<User> {
    * @param username String
    * @param password String
    */
-  async validateUser(username: string, password): Promise<any> {
-    const user = await this.findOne(username);
+  async validateUser(username: string, password: string): Promise<any> {
+    const user = await this.findByUserName(username);
     if (
       user &&
       createHmac(CREATE_HMAC_KEY, password).digest(CREATE_HMAC_DIGEST) ===
@@ -62,5 +63,10 @@ export class AuthService extends CsCrudEntityService<User> {
     return {
       access_token: this.jwtService.sign(data),
     };
+  }
+
+  async validateUserPayload(payload) {
+    // const user = this.us;
+    return payload;
   }
 }

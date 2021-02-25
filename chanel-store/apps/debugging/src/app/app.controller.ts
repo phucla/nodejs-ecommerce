@@ -5,6 +5,8 @@ import {
   Post,
   Body,
   UseInterceptors,
+  Put,
+  Param,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 
@@ -156,5 +158,35 @@ export class AppController {
   @Delete('remove-data')
   async removeAllData() {
     return this.appService.removeData();
+  }
+
+  /****************************/
+  /** Debugging API of Admin account */
+  /****************************/
+  @ApiTags('Admin Account')
+  @Post('admin')
+  @ApiBody({
+    type: CreateDebuggingStoreDto,
+  })
+  @ApiOkResponse({
+    description: 'The root Admin has been successfully created.',
+    type: User,
+  })
+  async createRootAdmin(): Promise<User> {
+    return this.appService.createRootAdmin();
+  }
+
+  @ApiTags('Admin Account')
+  @Put('admin/:id')
+  @ApiOkResponse({
+    description: 'The root Admin has been successfully updated.',
+    type: User,
+  })
+  async updateRootAdmin(
+    @Param('id') id: number,
+    @Body() body: CreateDebuggingProductDto
+  ): Promise<User> {
+    console.log('id', id);
+    return this.appService.updateRootAdmin(id, body);
   }
 }

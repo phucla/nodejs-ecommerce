@@ -159,14 +159,30 @@ export class AppService {
    * Create root Admin account
    */
   async createRootAdmin(): Promise<User> {
+    const latestId = await this._getLatestId(this.userService);
     const admin: IUser = {
-      email: 'admin@test.com',
-      user_name: 'admin',
+      email: `admin${latestId + 1}@test.com`,
+      user_name: `admin${latestId + 1}`,
       password: this.DEFAULT_PASSWORD,
       role: Role.Admin,
     };
 
-    return await this.userService.create(admin);
+    return await this.userService.createUser(admin);
+  }
+
+  /**
+   * Create root Admin account
+   */
+  async updateRootAdmin(id: number, updateUserDto): Promise<User> {
+    const latestId = await this._getLatestId(this.userService);
+    const admin: IUser = {
+      email: `admin${latestId + 1}@test.com`,
+      user_name: `admin${latestId + 1}`,
+      password: this.DEFAULT_PASSWORD,
+      role: Role.Admin,
+    };
+
+    return await this.userService.updateUser(id, updateUserDto);
   }
 
   async createStoreManager(
@@ -204,7 +220,7 @@ export class AppService {
         role: Role.User,
       };
 
-      const userResponse = await this.userService.create(userDto);
+      const userResponse = await this.userService.createUser(userDto);
       users.push(userResponse);
 
       // Create profile of User
@@ -575,7 +591,7 @@ export class AppService {
       };
 
       // Create Store manager
-      const storeMangerResponse = await this.userService.create(
+      const storeMangerResponse = await this.userService.createUser(
         storeManagerDto
       );
       managers.push(storeMangerResponse);

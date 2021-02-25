@@ -9,6 +9,7 @@ import { Profile } from '@chanel-store/customer';
 
 // Internal module
 import { User, Address, ShippingAddress } from './shared.entity';
+import { CreateUserDto, UpdateUserDto } from './share.dto';
 
 @Injectable()
 export class SharedService {}
@@ -21,6 +22,17 @@ export class UserService extends CsCrudEntityService<User> {
     private readonly profileRepository: Repository<Profile>
   ) {
     super(userRepository);
+  }
+
+  async createUser(entity: CreateUserDto): Promise<User> {
+    const result: User = await this.userRepository.create(entity);
+    await this.userRepository.save(result);
+    return result;
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findById(id);
+    return await this.userRepository.save(Object.assign(user, updateUserDto));
   }
 
   async findByLogin(username: string, password) {

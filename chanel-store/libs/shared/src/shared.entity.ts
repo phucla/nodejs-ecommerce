@@ -7,16 +7,17 @@ import {
   OneToMany,
   JoinColumn,
   BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { createHmac } from 'crypto';
+import * as bcrypt from 'bcrypt';
 
 // External module
 import { CsCrudEntity } from '@chanel-store/core';
 
 // Internal
 import { Role } from './enums/role.enum';
-import { CREATE_HMAC_KEY, CREATE_HMAC_DIGEST } from './constants';
+import { CREATE_HMAC_KEY } from './constants';
 
 /**
  * Define the User entity
@@ -65,10 +66,9 @@ export class User extends CsCrudEntity {
   shippingAddress: ShippingAddress[];
 
   @BeforeInsert()
-  encryptPassword() {
-    this.password = createHmac(CREATE_HMAC_KEY, this.password).digest(
-      CREATE_HMAC_DIGEST
-    );
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, CREATE_HMAC_KEY);
   }
 }
 

@@ -1,12 +1,8 @@
-import { createHmac } from 'crypto';
-import { CREATE_HMAC_KEY, CREATE_HMAC_DIGEST } from '@chanel-store/shared';
+import * as bcrypt from 'bcrypt';
 
-export const comparePassword = (
+export const comparePassword = async (
   userPassword: string,
   currentPassword: string
 ) => {
-  return (
-    createHmac(CREATE_HMAC_KEY, currentPassword).digest(CREATE_HMAC_DIGEST) ===
-    userPassword
-  );
+  return await bcrypt.compare(currentPassword, userPassword);
 };

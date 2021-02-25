@@ -6,6 +6,7 @@ import { ContextIdFactory, ModuleRef } from '@nestjs/core';
 
 // Internal module
 import { AuthService } from './auth.service';
+import { JwtPayload } from './interface';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -25,7 +26,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     request: Request,
     username: string,
     password: string
-  ): Promise<any> {
+  ): Promise<JwtPayload> {
     const contextId = ContextIdFactory.getByRequest(request);
     const authService = await this.moduRef.resolve(AuthService, contextId);
     const user = await authService.validateUser(username, password);

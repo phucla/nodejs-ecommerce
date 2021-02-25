@@ -186,7 +186,6 @@ export class AppController {
     @Param('id') id: number,
     @Body() body: CreateDebuggingProductDto
   ): Promise<User> {
-    console.log('id', id);
     return this.appService.updateRootAdmin(id, body);
   }
 }

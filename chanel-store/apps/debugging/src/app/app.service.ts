@@ -144,14 +144,14 @@ export class AppService {
       });
 
       for (const user of users) {
-        await this.userService.hardDelete(user.id);
+        await this.userService.delete(user.id);
       }
       return;
     }
 
     // Remove order item
     for (const userId of userIds) {
-      await this.userService.hardDelete(userId);
+      await this.userService.delete(userId);
     }
   }
 

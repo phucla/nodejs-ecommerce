@@ -73,9 +73,16 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return await this.repository.save(entity);
   }
 
-  async delete(id: number | FindConditions<T>): Promise<void> {
+  async delete(
+    id: number | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean> {
+    if (!isSoftDelete) {
+      await this.repository.delete(id);
+      return true;
+    }
     await this.repository.softDelete(id);
-    return;
+    return true;
   }
 
   async restoreById(id: number): Promise<T> {
@@ -84,13 +91,26 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return this.findById(id);
   }
 
-  async bulkDelete(ids?: number[] | FindConditions<T>): Promise<void> {
+  async bulkDelete(
+    ids?: number[] | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean> {
     if (ids) {
-      await this.repository.delete(ids);
+      if (!isSoftDelete) {
+        await this.repository.delete(ids);
+        return true;
+      }
+      await this.repository.softDelete(ids);
+      return true;
     } else {
       const entities = await this.find();
-      if (!entities.length) return;
-      await this.repository.delete(entities.map((item) => item.id));
+      if (!entities.length) return false;
+      if (!isSoftDelete) {
+        await this.repository.delete(entities.map((item) => item.id));
+        return true;
+      }
+      await this.repository.softDelete(entities.map((item) => item.id));
+      return true;
     }
   }
 }

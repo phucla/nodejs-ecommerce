@@ -35,19 +35,28 @@ export class UserService extends CsCrudEntityService<User> {
     return await this.userRepository.save(Object.assign(user, updateUserDto));
   }
 
-  async findByLogin(username: string, password) {
+  async findByLogin(username: string): Promise<User> {
     const user: User = await this.findOne({ user_name: username });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
+    return user;
   }
 
-  async hardDelete(id: number): Promise<void> {
+  async deleteUser(id: number, isSoftDelete: boolean): Promise<boolean> {
     const user = await this.findById(id);
-    await this.profileRepository.delete({
-      user,
-    });
-    await this.bulkDelete([id]);
+    if (!isSoftDelete) {
+      await this.profileRepository.delete({
+        user,
+      });
+    } else {
+      await this.profileRepository.softDelete({
+        user,
+      });
+    }
+
+    await this.delete(id, isSoftDelete);
+    return true;
   }
 }
 

@@ -13,11 +13,17 @@ export interface ICsCrudService<T> {
   findOneWithDeleted(id: number): Promise<T>;
   updateById(id: number, entity: DeepPartial<T>): Promise<T>;
   create(entity: DeepPartial<T>): Promise<T>;
-  delete(id: number | FindConditions<T>): Promise<void>;
+  delete(
+    id: number | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean>;
   restoreById(id: number): Promise<T>;
   findOne(
     conditions?: FindConditions<T>,
     options?: FindOneOptions<T>
   ): Promise<T>;
-  bulkDelete(ids?: number[] | FindConditions<T>): Promise<void>;
+  bulkDelete(
+    ids?: number[] | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean>;
 }

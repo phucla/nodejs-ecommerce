@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class DebuggingStoreDto {
+export class CreateDebuggingStoreDto {
   @ApiProperty({
     description: 'Number of Store',
     default: 1,
@@ -11,7 +11,7 @@ export class DebuggingStoreDto {
   numberStore: number;
 }
 
-export class DebuggingUserDto {
+export class CreateDebuggingUserDto {
   @ApiProperty({
     description: 'Number of User',
     default: 1,
@@ -21,7 +21,7 @@ export class DebuggingUserDto {
   numberUser: number;
 }
 
-export class DebuggingCategoryDto {
+export class CreateDebuggingCategoryDto {
   @ApiProperty({
     description: 'Number of Category',
     default: 1,
@@ -46,7 +46,7 @@ export class DebuggingCategoryDto {
   parentId: number;
 }
 
-export class DebuggingStoreManagerDto {
+export class CreateDebuggingStoreManagerDto {
   @ApiProperty({
     description: 'Number of Store Manager',
     default: 1,
@@ -64,7 +64,7 @@ export class DebuggingStoreManagerDto {
   storeId?: number;
 }
 
-export class DebuggingOrderDto {
+export class CreateDebuggingOrderDto {
   @ApiProperty({
     description: 'Number of Order',
     default: 1,
@@ -82,7 +82,7 @@ export class DebuggingOrderDto {
   customerId?: number;
 }
 
-export class DebuggingProductDto {
+export class CreateDebuggingProductDto {
   @ApiProperty({
     description: 'Number of Product',
     default: 1,

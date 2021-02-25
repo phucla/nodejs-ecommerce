@@ -93,8 +93,8 @@ export class AppService {
   }
 
   async removeData(): Promise<void> {
-    this.removeOrders();
-    this.removeUsers(Role.User);
+    await this.removeOrders();
+    await this.removeUsers(Role.User);
   }
 
   async removeOrders(orderIds?: number[]): Promise<void> {
@@ -224,7 +224,7 @@ export class AppService {
       users.push(userResponse);
 
       // Create profile of User
-      this.createProfile(userResponse);
+      await this.createProfile(userResponse);
     }
     this.logger.debug('The Users has been successfully created');
     return users;
@@ -597,7 +597,7 @@ export class AppService {
       managers.push(storeMangerResponse);
 
       // Create profile of Store manager
-      this.createProfile(storeMangerResponse, store);
+      await this.createProfile(storeMangerResponse, store);
     }
     return managers;
   }

@@ -73,7 +73,7 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return await this.repository.save(entity);
   }
 
-  async delete(id?: number | number[] | FindConditions<T>): Promise<void> {
+  async delete(id: number | FindConditions<T>): Promise<void> {
     await this.repository.softDelete(id);
     return;
   }
@@ -84,7 +84,7 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return this.findById(id);
   }
 
-  async bulkDelete(ids?: number | number[] | FindConditions<T>): Promise<void> {
+  async bulkDelete(ids?: number[] | FindConditions<T>): Promise<void> {
     if (ids) {
       await this.repository.delete(ids);
     } else {

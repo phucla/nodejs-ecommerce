@@ -20,3 +20,6 @@ export * from './utils/utils';
 
 // Interceptor
 export * from './interceptor';
+
+// Pipe
+export * from './pipe';

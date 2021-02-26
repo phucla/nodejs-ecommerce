@@ -63,7 +63,6 @@ export class AuthService extends CsCrudEntityService<User> {
     if (user) {
       return {
         username: user.user_name,
-        id: user.id,
         role: user.role,
       };
     }
@@ -82,9 +81,12 @@ export class AuthService extends CsCrudEntityService<User> {
     };
   }
 
-  // TODO
-  async validateUserPayload(payload) {
-    // const user = this.us;
-    return payload;
+  /**
+   * Validate User payload
+   * @param payload
+   */
+  async validateUserPayload(payload: JwtPayload): Promise<User> {
+    const user: User = await this.findByUserName(payload.username);
+    return user;
   }
 }

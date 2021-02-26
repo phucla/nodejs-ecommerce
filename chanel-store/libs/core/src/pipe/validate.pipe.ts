@@ -40,7 +40,6 @@ export class ValidatePipe<T> implements PipeTransform {
   }
 
   private buildError(errors: ValidationError[]) {
-    console.log(errors);
     const result = {};
     errors.forEach((element) => {
       const prop = element.property;

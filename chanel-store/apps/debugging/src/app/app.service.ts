@@ -171,17 +171,9 @@ export class AppService {
   }
 
   /**
-   * Create root Admin account
+   * Update root Admin account
    */
   async updateRootAdmin(id: number, updateUserDto): Promise<User> {
-    const latestId = await this._getLatestId(this.userService);
-    const admin: IUser = {
-      email: `admin${latestId + 1}@test.com`,
-      user_name: `admin${latestId + 1}`,
-      password: this.DEFAULT_PASSWORD,
-      role: Role.Admin,
-    };
-
     return await this.userService.updateUser(id, updateUserDto);
   }
 

@@ -20,7 +20,6 @@ export class ValidatePipe<T> implements PipeTransform {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
-
     const object = plainToClass(metatype, value);
     const errors: ValidationError[] = await validate(object);
     if (errors.length > 0) {
@@ -32,6 +31,7 @@ export class ValidatePipe<T> implements PipeTransform {
         HttpStatus.BAD_REQUEST
       );
     }
+    return value;
   }
 
   private toValidate(metatype): boolean {

@@ -10,7 +10,6 @@ import { User } from '@chanel-store/shared';
 // Internal
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { JWT_SECRET, EXPIRE_DATE } from './constants/auth.const';
 
@@ -26,7 +25,7 @@ import { JWT_SECRET, EXPIRE_DATE } from './constants/auth.const';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}

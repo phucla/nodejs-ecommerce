@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 
 // External module
 import { Address } from '@chanel-store/shared';
@@ -27,6 +28,8 @@ export class Store extends CsCrudPublishedEntity {
     type: String,
     example: 'Join Store',
   })
+  @IsString()
+  @IsNotEmpty()
   @Column()
   name: string;
 
@@ -35,6 +38,8 @@ export class Store extends CsCrudPublishedEntity {
     example: '123456',
   })
   @Column()
+  @IsString()
+  @IsNotEmpty()
   lat: string;
 
   @ApiProperty({
@@ -42,6 +47,8 @@ export class Store extends CsCrudPublishedEntity {
     example: '123456',
   })
   @Column()
+  @IsString()
+  @IsNotEmpty()
   lng: string;
 
   @ApiProperty({
@@ -49,6 +56,8 @@ export class Store extends CsCrudPublishedEntity {
     example: '12345678',
   })
   @Column()
+  @IsString()
+  @IsNotEmpty()
   phone_number: string;
 
   @ApiProperty({
@@ -56,6 +65,9 @@ export class Store extends CsCrudPublishedEntity {
     example: 'join@gmail.com',
   })
   @Column()
+  @IsString()
+  @IsNotEmpty()
+  @IsEmail()
   email: string;
 
   @ApiProperty({
@@ -63,10 +75,13 @@ export class Store extends CsCrudPublishedEntity {
     example: 'Store description',
   })
   @Column()
+  @IsString()
+  @IsNotEmpty()
   description: string;
 
   @OneToOne(() => Address)
   @JoinColumn()
+  @IsNotEmpty()
   store_address: Address;
 
   @OneToMany(() => Profile, (profile) => profile.store)

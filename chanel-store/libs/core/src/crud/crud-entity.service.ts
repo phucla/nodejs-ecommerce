@@ -40,11 +40,7 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
   ): Promise<T> {
     const entity = await this.repository.findOne(conditions, options);
 
-    if (entity) {
-      return entity;
-    }
-
-    throw new NotFoundException();
+    return entity;
   }
 
   async findOneWithDeleted(id: number): Promise<T> {

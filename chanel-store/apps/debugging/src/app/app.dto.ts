@@ -51,7 +51,6 @@ export class CreateDebuggingStoreManagerDto {
     description: 'Number of Store Manager',
     default: 1,
   })
-  @IsNotEmpty()
   @IsInt()
   numberManager: number;
 
@@ -87,7 +86,6 @@ export class CreateDebuggingProductDto {
     description: 'Number of Product',
     default: 1,
   })
-  @IsNotEmpty()
   @IsInt()
   numberProduct: number;
 

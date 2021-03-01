@@ -13,7 +13,7 @@ import { ApiOkResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 // External module
 import { Store } from '@chanel-store/store';
 import { Role, User } from '@chanel-store/shared';
-import { LoggingInterceptor } from '@chanel-store/core';
+import { LoggingInterceptor, ValidatePipe } from '@chanel-store/core';
 
 // Internal module
 import { AppService } from './app.service';
@@ -60,7 +60,7 @@ export class AppController {
     type: User,
   })
   async createStoreManager(
-    @Body() body: CreateDebuggingStoreManagerDto
+    @Body(new ValidatePipe()) body: CreateDebuggingStoreManagerDto
   ): Promise<User[]> {
     return this.appService.createStoreManager(body.numberManager, body.storeId);
   }
@@ -84,7 +84,9 @@ export class AppController {
     isArray: true,
     type: User,
   })
-  async createCustomers(@Body() body: CreateDebuggingUserDto): Promise<User[]> {
+  async createCustomers(
+    @Body(new ValidatePipe()) body: CreateDebuggingUserDto
+  ): Promise<User[]> {
     return this.appService.createUser(body.numberUser);
   }
 

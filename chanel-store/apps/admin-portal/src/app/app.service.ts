@@ -14,7 +14,7 @@ import {
 } from '@chanel-store/store';
 
 // Internal module
-import { CreateStoreDto } from './app.dto';
+import { CreateStoreDto, UpdateStoreDto } from './app.dto';
 
 @Injectable()
 export class AppService {
@@ -63,18 +63,46 @@ export class AppService {
       };
       await this.businessHourService.create(businessHour);
     }
-    const storebusinessHours: BusinessHour[] = await this.businessHourService.find(
-      {
-        loadRelationIds: true,
-        where: {
-          store,
-        },
-        select: ['id', 'open_hour', 'close_hour', 'date_of_week'],
-      }
+    const storebusinessHours: BusinessHour[] = await this.businessHourService.getBusinessHoursByStore(
+      store
     );
     return {
       ...store,
       business_hours: storebusinessHours,
     };
+  }
+
+  /**
+   * Get Stores
+   */
+  async getStores(): Promise<Store[]> {
+    const stores: Store[] = await this.storeService.find({
+      loadRelationIds: true,
+    });
+    const result: Store[] = [];
+    for (const store of stores) {
+      const address = await this.addressService.findOne(store.store_address);
+      const businessHours = await this.businessHourService.getBusinessHoursByStore(
+        store
+      );
+      result.push({
+        ...store,
+        store_address: address,
+        business_hours: businessHours,
+      });
+    }
+
+    return result;
+  }
+
+  /**
+   * Update store by store id
+   * @param storeId
+   * @param payload
+   */
+  async updateStore(storeId: number, payload: UpdateStoreDto): Promise<void> {
+    await this.storeService.updateById(storeId, {
+      is_published: payload.is_published,
+    });
   }
 }

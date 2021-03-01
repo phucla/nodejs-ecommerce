@@ -6,6 +6,7 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
   Validate,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -61,4 +62,14 @@ export class CreateStoreDto extends CreateStoreDTO {
   @IsArray()
   @Validate(BusinessHourLength)
   businessHours: CreateBusinessHourDto[];
+}
+
+export class UpdateStoreDto {
+  @ApiProperty({
+    description: 'Archive or Unarchive store',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsBoolean()
+  is_published: boolean;
 }

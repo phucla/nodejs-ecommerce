@@ -58,4 +58,20 @@ export class BusinessHourService extends CsCrudEntityService<BusinessHour> {
   ) {
     super(csRepository);
   }
+
+  /**
+   * Get business hours by Store
+   * @param store
+   */
+  async getBusinessHoursByStore(store: Store): Promise<BusinessHour[]> {
+    const businessHours: BusinessHour[] = await this.find({
+      loadRelationIds: true,
+      where: {
+        store,
+      },
+      select: ['id', 'open_hour', 'close_hour', 'date_of_week'],
+    });
+
+    return businessHours;
+  }
 }

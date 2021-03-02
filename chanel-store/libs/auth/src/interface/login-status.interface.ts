@@ -1,5 +1,5 @@
 export interface LoginStatus {
   username: string;
-  access_token: any;
-  expiresIn: string;
+  access_token: string;
+  expiresIn: number;
 }

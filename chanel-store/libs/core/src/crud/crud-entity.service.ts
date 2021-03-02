@@ -40,6 +40,15 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
   ): Promise<T> {
     const entity = await this.repository.findOne(conditions, options);
 
+    return entity;
+  }
+
+  async findOneWithDeleted(id: number): Promise<T> {
+    const entity = await this.repository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
     if (entity) {
       return entity;
     }
@@ -47,22 +56,13 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     throw new NotFoundException();
   }
 
-  async findOneWithDeleted(id: number): Promise<T> {
-    const entiry = await this.repository.findOne({
-      where: { id },
-      withDeleted: true,
-    });
-
-    if (entiry) {
-      return entiry;
+  async updateById(id: number, payload: DeepPartial<T>): Promise<T> {
+    const entity = await this.findById(id);
+    if (!entity) {
+      throw new NotFoundException();
     }
 
-    throw new NotFoundException();
-  }
-
-  async updateById(id: number, entity: DeepPartial<T>): Promise<T> {
-    await this.findById(id);
-    const updateEntity = Object.assign({}, entity);
+    const updateEntity = Object.assign(entity, payload);
 
     await this.repository.save(updateEntity);
     return this.findById(id);

@@ -14,9 +14,9 @@ import { CsCrudEntityService, comparePassword } from '@chanel-store/core';
 import { User } from '@chanel-store/shared';
 
 // Internal module
-import { JwtPayload, LoginStatus } from './interface';
+import { JwtPayload } from './interface';
 import { EXPIRE_DATE } from './constants/auth.const';
-
+import { LoginDto } from './auth.dto';
 @Injectable()
 export class AuthService extends CsCrudEntityService<User> {
   constructor(
@@ -39,13 +39,16 @@ export class AuthService extends CsCrudEntityService<User> {
     throw new NotFoundException();
   }
 
-  async findByLogin(username: string, password: string): Promise<User> {
-    const user: User = await this.findOne({ user_name: username });
+  async findByLogin(loginDto: LoginDto): Promise<User> {
+    const user: User = await this.userRepository.findOne({
+      user_name: loginDto.username,
+      role: loginDto.role,
+    });
     if (!user) {
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
 
-    const areEqual = await comparePassword(user.password, password);
+    const areEqual = await comparePassword(user.password, loginDto.password);
     if (!areEqual) {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
@@ -53,38 +56,28 @@ export class AuthService extends CsCrudEntityService<User> {
   }
 
   /**
-   * Validate user with username and password
-   * @param username String
-   * @param password String
+   * Validate User payload
+   * @param payload
    */
-  async validateUser(username: string, password: string): Promise<JwtPayload> {
-    const user = await this.findByLogin(username, password);
-
-    if (user) {
-      return {
-        username: user.user_name,
-        id: user.id,
-        role: user.role,
-      };
-    }
-    return null;
+  async validateUserPayload(payload: JwtPayload): Promise<User> {
+    const user: User = await this.findByUserName(payload.username);
+    return user;
   }
 
   /**
-   * Login
-   * @param user any
+   * Signin
+   * @param loginDto
    */
-  async login(user: JwtPayload): Promise<LoginStatus> {
+  async signIn(loginDto: LoginDto) {
+    const user = await this.findByLogin(loginDto);
+    const payload: JwtPayload = {
+      username: user.user_name,
+      role: user.role,
+    };
     return {
-      access_token: this.jwtService.sign(user),
-      username: user.username,
+      access_token: this.jwtService.sign(payload),
+      username: user.user_name,
       expiresIn: EXPIRE_DATE,
     };
-  }
-
-  // TODO
-  async validateUserPayload(payload) {
-    // const user = this.us;
-    return payload;
   }
 }

@@ -1,5 +1,5 @@
 // Standard libs
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,6 +8,7 @@ import { CsCrudEntityService } from '@chanel-store/core';
 
 // Internal module
 import { Store, BusinessHour } from './store.entity';
+import { IStore } from './interface';
 
 @Injectable()
 export class StoreService extends CsCrudEntityService<Store> {
@@ -15,6 +16,37 @@ export class StoreService extends CsCrudEntityService<Store> {
     @InjectRepository(Store) private csRepository: Repository<Store>
   ) {
     super(csRepository);
+  }
+
+  /**
+   *
+   * @param payload
+   */
+  async createStore(payload: IStore): Promise<Store> {
+    // Check duplicate store email
+    const store: Store = await this.findOne({
+      email: payload.email,
+    });
+
+    if (store) {
+      throw new HttpException(
+        "Duplicate Store's email",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    const storeData: IStore = {
+      name: payload.name,
+      lat: payload.lat,
+      lng: payload.lng,
+      phone_number: payload.phone_number,
+      email: payload.email,
+      description: payload.description,
+      store_address: payload.store_address,
+    };
+
+    const storeEntity: Store = await this.create(storeData);
+    return storeEntity;
   }
 }
 
@@ -25,5 +57,21 @@ export class BusinessHourService extends CsCrudEntityService<BusinessHour> {
     private csRepository: Repository<BusinessHour>
   ) {
     super(csRepository);
+  }
+
+  /**
+   * Get business hours by Store
+   * @param store
+   */
+  async getBusinessHoursByStore(store: Store): Promise<BusinessHour[]> {
+    const businessHours: BusinessHour[] = await this.find({
+      loadRelationIds: true,
+      where: {
+        store,
+      },
+      select: ['id', 'open_hour', 'close_hour', 'date_of_week'],
+    });
+
+    return businessHours;
   }
 }

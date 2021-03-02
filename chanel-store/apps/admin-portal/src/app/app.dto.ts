@@ -1,14 +1,17 @@
+// Standard library
 import {
   IsNotEmpty,
   ValidatorConstraint,
   IsString,
   IsArray,
   ValidatorConstraintInterface,
-  ValidationArguments,
   Validate,
   IsBoolean,
+  IsInt,
 } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+
+// External module
 import {
   CreateStoreDTO,
   IBusinessHourDto,
@@ -17,8 +20,8 @@ import {
 
 @ValidatorConstraint()
 export class BusinessHourLength<T> implements ValidatorConstraintInterface {
-  validate(value: Array<T>, validationArguments: ValidationArguments) {
-    return value.length === 7;
+  validate(value: Array<T>) {
+    return value && value.length === 7;
   }
 
   defaultMessage() {
@@ -58,18 +61,40 @@ export class CreateStoreDto extends CreateStoreDTO {
     required: true,
     isArray: true,
   })
+  @Validate(BusinessHourLength)
   @IsNotEmpty()
   @IsArray()
-  @Validate(BusinessHourLength)
-  businessHours: CreateBusinessHourDto[];
+  business_hours: CreateBusinessHourDto[];
 }
 
-export class UpdateStoreDto {
+export class PublishStoreDto {
   @ApiProperty({
-    description: 'Archive or Unarchive store',
+    description: 'Publish or Unpublish Store',
     required: true,
   })
   @IsNotEmpty()
   @IsBoolean()
   is_published: boolean;
+}
+
+export class UpdateBusinessHourDto extends PartialType(CreateBusinessHourDto) {
+  @ApiProperty({
+    description: 'Business Hour Id',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  id: number;
+}
+
+export class UpdateStoreDto extends PartialType(CreateStoreDTO) {
+  @ApiProperty({
+    description: 'Business Hours',
+    required: true,
+    isArray: true,
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @Validate(BusinessHourLength)
+  business_hours: UpdateBusinessHourDto[];
 }

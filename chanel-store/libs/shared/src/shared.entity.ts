@@ -18,6 +18,7 @@ import { CsCrudEntity } from '@chanel-store/core';
 // Internal
 import { Role } from './enums/role.enum';
 import { CREATE_HMAC_KEY } from './constants';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 /**
  * Define the User entity
@@ -80,8 +81,11 @@ export class Address extends CsCrudEntity {
   @ApiProperty({
     type: String,
     example: '123 apt, New York',
+    required: true,
   })
   @Column()
+  @IsNotEmpty()
+  @IsString()
   address: string;
 
   @ApiProperty({
@@ -89,12 +93,16 @@ export class Address extends CsCrudEntity {
     example: 'New York',
   })
   @Column()
+  @IsNotEmpty()
+  @IsString()
   city: string;
 
   @ApiProperty({
     type: String,
     example: '012345',
   })
+  @IsNotEmpty()
+  @IsString()
   @Column({
     length: 6,
   })
@@ -104,6 +112,8 @@ export class Address extends CsCrudEntity {
     type: String,
     example: 'NY',
   })
+  @IsNotEmpty()
+  @IsString()
   @Column()
   state: string;
 }

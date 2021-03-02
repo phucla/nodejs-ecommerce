@@ -24,3 +24,7 @@ export interface IBusinessHourDto {
 export interface IBusinessHour extends IBusinessHourDto {
   store: Store;
 }
+
+export interface ICreateStore extends IStore {
+  business_hours: IBusinessHourDto[];
+}

@@ -8,7 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 // External module
 import { Address } from '@chanel-store/shared';
@@ -82,6 +83,8 @@ export class Store extends CsCrudPublishedEntity {
   @OneToOne(() => Address)
   @JoinColumn()
   @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => BusinessHour)
   store_address: Address;
 
   @OneToMany(() => Profile, (profile) => profile.store)

@@ -12,15 +12,16 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiOkResponse } from '@nestjs/swagger';
 import { Roles } from '@chanel-store/auth';
+import { DeepPartial } from 'typeorm';
 
 // External libs
 import { LoggingInterceptor, ValidatePipe } from '@chanel-store/core';
-import { User } from '@chanel-store/shared';
 
 // Internal module
 import { AppService } from './app.service';
 import { Role } from '@chanel-store/shared';
-import { CreateStoreDto, UpdateStoreDto } from './app.dto';
+import { CreateStoreDto, PublishStoreDto, UpdateStoreDto } from './app.dto';
+import { Store } from '@chanel-store/store';
 
 @UseInterceptors(LoggingInterceptor)
 @Roles(Role.Admin)
@@ -35,27 +36,68 @@ export class AppController {
   })
   @ApiOkResponse({
     description: 'The Store has been successfully created.',
-    type: User,
+    type: Store,
   })
-  createStore(@Body(new ValidatePipe()) body: CreateStoreDto) {
+  createStore(@Body(new ValidatePipe()) body: CreateStoreDto): Promise<Store> {
     return this.appService.createStore(body);
   }
 
   @ApiTags('Store')
   @Get('store')
-  @ApiBody({
-    type: CreateStoreDto,
-  })
   @ApiOkResponse({
-    description: 'The Store has been successfully created.',
-    type: User,
+    type: Store,
+    isArray: true,
   })
-  getStore() {
+  getStores(): Promise<Store[]> {
     return this.appService.getStores();
   }
 
   /**
-   * Admin Archive or Unarchive store
+   * Admin publish or unpublish store
+   * @param id
+   * @param body
+   */
+  @ApiTags('Store')
+  @Put('store/:id/publish')
+  @ApiBody({
+    type: PublishStoreDto,
+  })
+  @ApiOkResponse({
+    description: 'The Store has been successfully updated.',
+  })
+  archiveStore(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+    )
+    id: number,
+    @Body(new ValidatePipe()) body: PublishStoreDto
+  ): Promise<void> {
+    return this.appService.publishStore(id, body);
+  }
+
+  /**
+   * Get store detail by id
+   * @param id
+   * @param body
+   */
+  @ApiTags('Store')
+  @Get('store/:id')
+  @ApiOkResponse({
+    type: Store,
+  })
+  getStore(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
+    )
+    id: number
+  ): Promise<DeepPartial<Store>> {
+    return this.appService.getStoreById(id);
+  }
+
+  /**
+   * Admin update store
    * @param id
    * @param body
    */
@@ -65,8 +107,7 @@ export class AppController {
     type: UpdateStoreDto,
   })
   @ApiOkResponse({
-    description: 'The Store has been successfully created.',
-    type: User,
+    description: 'The Store has been successfully updated.',
   })
   updateStore(
     @Param(
@@ -75,7 +116,7 @@ export class AppController {
     )
     id: number,
     @Body(new ValidatePipe()) body: UpdateStoreDto
-  ) {
+  ): Promise<void> {
     return this.appService.updateStore(id, body);
   }
 }

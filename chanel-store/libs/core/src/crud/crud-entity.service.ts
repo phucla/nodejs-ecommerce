@@ -1,6 +1,12 @@
 // Standard library
 import { NotFoundException } from '@nestjs/common';
-import { DeepPartial, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  Repository,
+  FindManyOptions,
+  FindConditions,
+  FindOneOptions,
+} from 'typeorm';
 
 // Internal
 import { CsCrudEntity } from './crud.entity';
@@ -10,8 +16,8 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
   implements ICsCrudService<T> {
   constructor(private repository: Repository<T>) {}
 
-  async find(): Promise<T[]> {
-    return await this.repository.find();
+  async find(options?: FindManyOptions<T>): Promise<T[]> {
+    return await this.repository.find(options);
   }
 
   async findWithDeleted(): Promise<T[]> {
@@ -20,6 +26,19 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
 
   async findById(id: number): Promise<T> {
     const entity = await this.repository.findOne({ where: { id } });
+
+    if (entity) {
+      return entity;
+    }
+
+    throw new NotFoundException();
+  }
+
+  async findOne(
+    conditions?: FindConditions<T>,
+    options?: FindOneOptions<T>
+  ): Promise<T> {
+    const entity = await this.repository.findOne(conditions, options);
 
     if (entity) {
       return entity;
@@ -54,15 +73,44 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
     return await this.repository.save(entity);
   }
 
-  async deleteById(id: number): Promise<void> {
-    await this.findById(id);
+  async delete(
+    id: number | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean> {
+    if (!isSoftDelete) {
+      await this.repository.delete(id);
+      return true;
+    }
     await this.repository.softDelete(id);
-    return;
+    return true;
   }
 
   async restoreById(id: number): Promise<T> {
     await this.findOneWithDeleted(id);
     await this.repository.restore(id);
     return this.findById(id);
+  }
+
+  async bulkDelete(
+    ids?: number[] | FindConditions<T>,
+    isSoftDelete?: boolean
+  ): Promise<boolean> {
+    if (ids) {
+      if (!isSoftDelete) {
+        await this.repository.delete(ids);
+        return true;
+      }
+      await this.repository.softDelete(ids);
+      return true;
+    } else {
+      const entities = await this.find();
+      if (!entities.length) return false;
+      if (!isSoftDelete) {
+        await this.repository.delete(entities.map((item) => item.id));
+        return true;
+      }
+      await this.repository.softDelete(entities.map((item) => item.id));
+      return true;
+    }
   }
 }

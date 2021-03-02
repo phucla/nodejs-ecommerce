@@ -6,14 +6,18 @@ import {
   OneToOne,
   OneToMany,
   JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
 
 // External module
 import { CsCrudEntity } from '@chanel-store/core';
 
 // Internal
 import { Role } from './enums/role.enum';
+import { CREATE_HMAC_KEY } from './constants';
 
 /**
  * Define the User entity
@@ -60,6 +64,12 @@ export class User extends CsCrudEntity {
     cascade: true,
   })
   shippingAddress: ShippingAddress[];
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await bcrypt.hash(this.password, CREATE_HMAC_KEY);
+  }
 }
 
 /**
@@ -69,14 +79,14 @@ export class User extends CsCrudEntity {
 export class Address extends CsCrudEntity {
   @ApiProperty({
     type: String,
-    example: '123 apt, new york',
+    example: '123 apt, New York',
   })
   @Column()
   address: string;
 
   @ApiProperty({
     type: String,
-    example: 'New york',
+    example: 'New York',
   })
   @Column()
   city: string;
@@ -108,5 +118,5 @@ export class ShippingAddress extends CsCrudEntity {
 
   @OneToOne(() => Address)
   @JoinColumn()
-  address: Address;
+  address: Address | number;
 }

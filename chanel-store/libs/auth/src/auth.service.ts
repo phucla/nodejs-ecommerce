@@ -1,16 +1,21 @@
 // Standard library
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { createHmac } from 'crypto';
 
 // External module
-import { CsCrudEntityService } from '@chanel-store/core';
+import { CsCrudEntityService, comparePassword } from '@chanel-store/core';
 import { User } from '@chanel-store/shared';
 
 // Internal module
-import { CREATE_HMAC_KEY, CREATE_HMAC_DIGEST } from './constants/auth.const';
+import { JwtPayload, LoginStatus } from './interface';
+import { EXPIRE_DATE } from './constants/auth.const';
 
 @Injectable()
 export class AuthService extends CsCrudEntityService<User> {
@@ -25,7 +30,7 @@ export class AuthService extends CsCrudEntityService<User> {
    * Find user by user name
    * @param username String
    */
-  async findOne(username: string): Promise<User> {
+  async findByUserName(username: string): Promise<User> {
     const entity = await this.userRepository.findOne({ user_name: username });
     if (entity) {
       return entity;
@@ -34,21 +39,33 @@ export class AuthService extends CsCrudEntityService<User> {
     throw new NotFoundException();
   }
 
+  async findByLogin(username: string, password: string): Promise<User> {
+    const user: User = await this.findOne({ user_name: username });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+    }
+
+    const areEqual = await comparePassword(user.password, password);
+    if (!areEqual) {
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+    }
+    return user;
+  }
+
   /**
    * Validate user with username and password
    * @param username String
    * @param password String
    */
-  async validateUser(username: string, password): Promise<any> {
-    const user = await this.findOne(username);
-    if (
-      user &&
-      createHmac(CREATE_HMAC_KEY, password).digest(CREATE_HMAC_DIGEST) ===
-        user.password
-    ) {
-      // Remove password
-      const { password, ...result } = user;
-      return result;
+  async validateUser(username: string, password: string): Promise<JwtPayload> {
+    const user = await this.findByLogin(username, password);
+
+    if (user) {
+      return {
+        username: user.user_name,
+        id: user.id,
+        role: user.role,
+      };
     }
     return null;
   }
@@ -57,10 +74,17 @@ export class AuthService extends CsCrudEntityService<User> {
    * Login
    * @param user any
    */
-  async login(user: any) {
-    const data = user;
+  async login(user: JwtPayload): Promise<LoginStatus> {
     return {
-      access_token: this.jwtService.sign(data),
+      access_token: this.jwtService.sign(user),
+      username: user.username,
+      expiresIn: EXPIRE_DATE,
     };
+  }
+
+  // TODO
+  async validateUserPayload(payload) {
+    // const user = this.us;
+    return payload;
   }
 }

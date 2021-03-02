@@ -31,18 +31,18 @@ export class Store extends CsCrudPublishedEntity {
   name: string;
 
   @ApiProperty({
-    type: Number,
-    example: 123456,
+    type: String,
+    example: '123456',
   })
   @Column()
-  lat: number;
+  lat: string;
 
   @ApiProperty({
-    type: Number,
-    example: 123456,
+    type: String,
+    example: '123456',
   })
   @Column()
-  lng: number;
+  lng: string;
 
   @ApiProperty({
     type: String,
@@ -69,14 +69,10 @@ export class Store extends CsCrudPublishedEntity {
   @JoinColumn()
   store_address: Address;
 
-  @OneToMany(() => Profile, (profile) => profile.store, {
-    cascade: true,
-  })
+  @OneToMany(() => Profile, (profile) => profile.store)
   profiles: Profile[];
 
-  @OneToMany(() => BusinessHour, (businessHour) => businessHour.store, {
-    cascade: true,
-  })
+  @OneToMany(() => BusinessHour, (businessHour) => businessHour.store)
   business_hours: BusinessHour[];
 
   @OneToMany(() => Category, (category) => category.store)

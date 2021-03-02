@@ -4,7 +4,21 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 // Internal
 import { ProductController } from './product.controller';
-import { ProductService } from './product.service';
+import {
+  ProductService,
+  CategoryService,
+  DiscountService,
+  OrderService,
+  OrderItemService,
+  ProductSkuService,
+  VariantService,
+  VariantValueService,
+  SkuValueService,
+  CustomerFeedbackService,
+  MediaService,
+  WishlistService,
+  CartItemService,
+} from './product.service';
 import {
   Category,
   Product,
@@ -39,7 +53,35 @@ import {
     ]),
   ],
   controllers: [ProductController],
-  providers: [ProductService],
-  exports: [],
+  providers: [
+    ProductService,
+    CategoryService,
+    DiscountService,
+    OrderService,
+    OrderItemService,
+    ProductSkuService,
+    VariantService,
+    VariantValueService,
+    SkuValueService,
+    CustomerFeedbackService,
+    MediaService,
+    WishlistService,
+    CartItemService,
+  ],
+  exports: [
+    ProductService,
+    CategoryService,
+    DiscountService,
+    OrderService,
+    OrderItemService,
+    ProductSkuService,
+    VariantService,
+    VariantValueService,
+    SkuValueService,
+    CustomerFeedbackService,
+    MediaService,
+    WishlistService,
+    CartItemService,
+  ],
 })
 export class ProductModule {}

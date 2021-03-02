@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/database',
     '<rootDir>/libs/store',
     '<rootDir>/libs/shared',
+    '<rootDir>/apps/debugging',
   ],
 };

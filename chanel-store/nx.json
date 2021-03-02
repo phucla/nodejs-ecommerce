@@ -25,6 +25,7 @@
     "customer": { "tags": [] },
     "database": { "tags": [] },
     "store": { "tags": [] },
-    "shared": { "tags": [] }
+    "shared": { "tags": [] },
+    "debugging": { "tags": [] }
   }
 }

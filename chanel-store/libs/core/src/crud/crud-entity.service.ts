@@ -113,4 +113,8 @@ export abstract class CsCrudEntityService<T extends CsCrudEntity>
       return true;
     }
   }
+
+  async countRecords(): Promise<number> {
+    return await this.repository.count();
+  }
 }

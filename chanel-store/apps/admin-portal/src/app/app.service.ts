@@ -1,6 +1,6 @@
 // Standard library
 import { Injectable } from '@nestjs/common';
-import { DeepPartial } from 'typeorm';
+import { DeepPartial, In, Raw } from 'typeorm';
 
 // External libs
 import { AddressService, IAddress, Address } from '@chanel-store/shared';
@@ -13,6 +13,7 @@ import {
   IBusinessHourDto,
   BusinessHour,
 } from '@chanel-store/store';
+import { CsPaginationResultDto } from '@chanel-store/core';
 
 // Internal module
 import { UpdateStoreDto, PublishStoreDto, CreateStoreDto } from './app.dto';
@@ -24,10 +25,6 @@ export class AppService {
     private storeService: StoreService,
     private addressService: AddressService
   ) {}
-
-  getData(): { message: string } {
-    return { message: 'Welcome to admin-portal!' };
-  }
 
   /**
    * Create store
@@ -76,10 +73,40 @@ export class AppService {
   /**
    * Get Stores
    */
-  async getStores(): Promise<Store[]> {
+  async getStores(query): Promise<CsPaginationResultDto<Store>> {
+    const skippedItems = (query.page - 1) * query.limit;
+    const totalCount = await this.storeService.countRecords();
+    let storeQuery = {};
+    let address: Address[] = [];
+    if (query.city) {
+      address = await this.addressService.find({
+        where: {
+          city: Raw(
+            (city) => `LOWER(${city}) Like '%${query.city.toLowerCase()}%'`
+          ),
+        },
+      });
+    }
+
+    if (address.length) {
+      storeQuery = Object.assign(storeQuery, {
+        store_address: In(address.map((item) => item.id)),
+      });
+    }
+
+    if (query.name) {
+      const name: string = query.name;
+      storeQuery = Object.assign(storeQuery, {
+        name: Raw((alias) => `LOWER(${alias}) Like '%${name.toLowerCase()}%'`),
+      });
+    }
     const stores: Store[] = await this.storeService.find({
+      skip: skippedItems,
+      take: query.limit,
       loadRelationIds: true,
+      where: storeQuery,
     });
+
     const result: Store[] = [];
     for (const store of stores) {
       const address = await this.addressService.findOne(store.store_address);
@@ -92,8 +119,13 @@ export class AppService {
         business_hours: businessHours,
       });
     }
-
-    return result;
+    return {
+      data: result,
+      totalCount,
+      page: query.page,
+      limit: query.limit,
+      length: result.length,
+    };
   }
 
   /**

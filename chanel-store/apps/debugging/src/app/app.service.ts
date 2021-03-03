@@ -272,8 +272,8 @@ export class AppService {
 
       // Create store business hour
       await this.createBusinessHour(storeEntity);
-      return stores;
     }
+    return stores;
   }
 
   /**

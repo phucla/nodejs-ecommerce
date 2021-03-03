@@ -9,19 +9,26 @@ import {
   Param,
   ParseIntPipe,
   HttpStatus,
+  Query,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiOkResponse } from '@nestjs/swagger';
-import { Roles } from '@chanel-store/auth';
 import { DeepPartial } from 'typeorm';
 
 // External libs
-import { LoggingInterceptor, ValidatePipe } from '@chanel-store/core';
+import {
+  LoggingInterceptor,
+  ValidatePipe,
+  CsPaginationResponse,
+  CsPaginationResultDto,
+} from '@chanel-store/core';
+import { Role } from '@chanel-store/shared';
+import { Store } from '@chanel-store/store';
+import { Roles } from '@chanel-store/auth';
 
 // Internal module
 import { AppService } from './app.service';
-import { Role } from '@chanel-store/shared';
 import { CreateStoreDto, PublishStoreDto, UpdateStoreDto } from './app.dto';
-import { Store } from '@chanel-store/store';
 
 @UseInterceptors(LoggingInterceptor)
 @Roles(Role.Admin)
@@ -44,12 +51,19 @@ export class AppController {
 
   @ApiTags('Store')
   @Get('store')
-  @ApiOkResponse({
-    type: Store,
-    isArray: true,
-  })
-  getStores(): Promise<Store[]> {
-    return this.appService.getStores();
+  @CsPaginationResponse(Store)
+  getStores(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('name') name: string,
+    @Query('city') city: string
+  ): Promise<CsPaginationResultDto<Store>> {
+    return this.appService.getStores({
+      page,
+      limit: limit > 10 ? 10 : limit,
+      name,
+      city,
+    });
   }
 
   /**
@@ -65,7 +79,7 @@ export class AppController {
   @ApiOkResponse({
     description: 'The Store has been successfully updated.',
   })
-  archiveStore(
+  publishStore(
     @Param(
       'id',
       new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })

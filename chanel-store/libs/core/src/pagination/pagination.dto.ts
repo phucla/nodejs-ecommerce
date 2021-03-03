@@ -14,4 +14,6 @@ export class CsPaginationResultDto<T> extends CsPaginationDto {
 
   @ApiProperty()
   totalCount: number;
+
+  length?: number;
 }

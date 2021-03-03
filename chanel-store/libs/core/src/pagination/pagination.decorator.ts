@@ -23,6 +23,18 @@ export const CsPaginationResponse = <T extends Type<any>>(model: T) =>
                 type: 'array',
                 items: { $ref: getSchemaPath(model) },
               },
+              length: {
+                type: 'number',
+              },
+              totalCount: {
+                type: 'number',
+              },
+              page: {
+                type: 'number',
+              },
+              limit: {
+                type: 'number',
+              },
             },
           },
         ],

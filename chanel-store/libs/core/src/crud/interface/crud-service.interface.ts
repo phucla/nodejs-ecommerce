@@ -26,4 +26,5 @@ export interface ICsCrudService<T> {
     ids?: number[] | FindConditions<T>,
     isSoftDelete?: boolean
   ): Promise<boolean>;
+  countRecords(): Promise<number>;
 }
